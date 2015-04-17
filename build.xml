@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="com.vasileff.fc" default="all">
+    <property environment="env"/>
+    <property name="ceylon.home" value="${env.CEYLON_HOME}"/>
+    <property name="ceylon.ant.lib" value="${ceylon.home}/lib/ceylon-ant.jar"/>
+    <property name="source.encoding" value="UTF-8"/>
+
+    <path id="ant-tasks">
+        <pathelement location="${ceylon.ant.lib}"/>
+    </path>
+    <typedef resource="com/redhat/ceylon/ant/antlib.xml" classpathref="ant-tasks"/>
+
+    <!-- directories -->
+    <property name="out.repo" location="${basedir}/modules"/>
+    <property name="ceylon.repo.dir" location="${user.home}/.ceylon/repo" />
+
+    <moduleset id="modules.jvm">
+        <module name="com.vasileff.fc"/>
+    </moduleset>
+
+    <moduleset id="modules.js">
+        <module name="com.vasileff.fc"/>
+    </moduleset>
+
+    <target name="all" depends="compile, compile-js, doc"/>
+
+    <target name="compile">
+        <ceylon-compile encoding="${source.encoding}">
+            <moduleset refid="modules.jvm"/>
+        </ceylon-compile>
+    </target>
+
+    <target name="compile-js">
+        <ceylon-compile-js encoding="${source.encoding}">
+            <moduleset refid="modules.js"/>
+        </ceylon-compile-js>
+    </target>
+
+    <target name="test" depends="compile">
+        <ceylon-test report="true">
+            <moduleset refid="modules.jvm"/>
+        </ceylon-test>
+    </target>
+
+    <target name="test-js" depends="compile-js">
+        <ceylon-test-js report="true">
+            <moduleset refid="modules.js"/>
+        </ceylon-test-js>
+    </target>
+
+    <target name="doc">
+        <ceylon-doc
+                encoding="${source.encoding}"
+                includesourcecode="true">
+            <moduleset refid="modules.jvm"/>
+        </ceylon-doc>
+    </target>
+
+    <target name="publish" depends="all"
+            description="Copies the SDK modules to the user's repository">
+        <copy todir="${ceylon.repo.dir}" overwrite="true">
+            <fileset dir="${out.repo}">
+                <include name="com/vasileff/ceylon/fc/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="publish-herd">
+        <fail message="Please specify a target Herd upload repo url with -Dherd.repo=..." unless="herd.repo"/>
+        <fail message="Please specify a target Herd user name with -Dherd.user=..." unless="herd.user"/>
+        <fail message="Please specify a target Herd password with -Dherd.pass=..." unless="herd.pass"/>
+        <ceylon-compile
+                encoding="${source.encoding}"
+                out="${herd.repo}"
+                user="${herd.user}"
+                pass="${herd.pass}">
+            <moduleset refid="modules.jvm"/>
+        </ceylon-compile>
+        <ceylon-compile-js
+                encoding="${source.encoding}"
+                out="${herd.repo}"
+                user="${herd.user}"
+                pass="${herd.pass}">
+            <moduleset refid="modules.js"/>
+        </ceylon-compile-js>
+        <ceylon-doc
+                encoding="${source.encoding}"
+                includesourcecode="true"
+                out="${herd.repo}"
+                user="${herd.user}"
+                pass="${herd.pass}">
+            <moduleset refid="modules.jvm"/>
+        </ceylon-doc>
+    </target>
+
+    <target name="clean">
+        <delete dir="modules"/>
+    </target>
+</project>
