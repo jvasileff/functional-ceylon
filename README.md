@@ -19,6 +19,11 @@ This library was written with the help of the following resources:
 * <https://www.playframework.com/documentation/2.4.x/api/scala/index.html#play.api.libs.iteratee.package>
 * <http://docs.typelevel.org/api/scalaz/stable/7.0.2/doc/#scalaz.iteratee.package>
 
+### StreamALG
+
+A basic Ceylon implementation of "Extensible Pipelines with Object Algebras"
+from <http://cgi.di.uoa.gr/~biboudis/streamalg.pdf>.
+
 ### Trampoline
 
 A small library for implementing recursive algorithms in constant stack space.
