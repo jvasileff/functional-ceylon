@@ -2,13 +2,15 @@ shared
 class LoggingAdvice<E, C>(
         ExecStreamAlg<E, C> & StreamAlg<C> alg)
         satisfies StreamAlg<C> &
-                  ExecStreamAlg<E, C> {
+                  ExecStreamAlg<E, C>
+        given E<E>
+        given C<E> {
 
     // Stream Alg Methods
     shared actual
-    Application<C, Result> map<Element, Result>(
+    C<Result> map<Element, Result>(
             Result(Element) mapper,
-            Application<C,Element> stream)
+            C<Element> stream)
         =>  alg.map((Element element) {
                 value mapped = mapper(element);
                 print("map: ``element else "<null>"`` -> \
@@ -17,33 +19,33 @@ class LoggingAdvice<E, C>(
             }, stream);
 
     shared actual
-    Application<C, Element> source<Element>(
+    C<Element> source<Element>(
             {Element*} array)
         =>  alg.source(array);
 
     shared actual
-    Application<C, Result> flatMap<Element, Result>(
-            Application<C, Result>(Element) mapper,
-            Application<C, Element> stream)
-        =>  alg.flatMap(mapper, stream);
+    C<Result> flatMap<Element, Result>(
+            C<Result>(Element) mapper,
+            C<Element> stream)
+        =>  alg.flatMap<Element, Result>(mapper, stream); // FIXME inference?
 
     shared actual
-    Application<C, Element> filter<Element>(
+    C<Element> filter<Element>(
             Boolean(Element) predicate,
-            Application<C, Element> stream)
+            C<Element> stream)
         =>  alg.filter(predicate, stream);
 
     //// Exec Alg Methods
     shared actual
-    Application<E, Integer> count<T>
-            (Application<C, T> stream) {
+    E<Integer> count<T>
+            (C<T> stream) {
         print("counting...");
-        return alg.count(stream);
+        return alg.count<T>(stream); // FIXME inference?
     }
 
     shared actual
-    Application<E,Element> reduce<Element>(
+    E<Element> reduce<Element>(
             Element partial,
             Element(Element, Element) accumulator,
-            Application<C,Element> stream) => nothing;
+            C<Element> stream) => nothing;
 }

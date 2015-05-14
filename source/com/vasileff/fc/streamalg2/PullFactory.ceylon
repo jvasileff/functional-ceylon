@@ -1,6 +1,6 @@
 shared class PullFactory()
-        satisfies StreamAlg<PullType> &
-                  ExecStreamAlg<IdType, PullType> {
+        satisfies StreamAlg<Pull> &
+                  ExecStreamAlg<Id, Pull> {
 
     shared actual
     Pull<Element> source<Element>({Element*} array) => object
@@ -15,14 +15,12 @@ shared class PullFactory()
     shared actual
     Pull<Result> map<Element, Result>(
             Result(Element) mapper,
-            Application<PullType, Element> stream) => object
+            Pull<Element> stream) => object
             satisfies Pull<Result> {
-
-        value pullStream = narrowPull(stream);
 
         shared actual
         Result|Finished next()
-            =>  if (!is Finished t = pullStream.next())
+            =>  if (!is Finished t = stream.next())
                 then mapper(t)
                 else finished;
     };
@@ -30,14 +28,12 @@ shared class PullFactory()
     shared actual
     Pull<Element> filter<Element>(
             Boolean(Element) predicate,
-            Application<PullType, Element> stream) => object
+            Pull<Element> stream) => object
             satisfies Pull<Element> {
-
-        value pullStream = narrowPull(stream);
 
         shared actual
         Element|Finished next() {
-            while (!is Finished element = pullStream.next()) {
+            while (!is Finished element = stream.next()) {
                 if (predicate(element)) {
                     return element;
                 }
@@ -48,24 +44,24 @@ shared class PullFactory()
 
     shared actual
     Pull<Result> flatMap<Element, Result>(
-            Application<PullType, Result>(Element) f,
-            Application<PullType, Element> s)
+            Pull<Result>(Element) f,
+            Pull<Element> s)
         =>  nothing;
 
     shared actual
     Id<Integer> count<Element>(
-            Application<PullType, Element> stream) {
-        value pullStream = narrowPull(stream);
+            Pull<Element> stream) {
+
         variable value count = 0;
-        while (!is Finished element = pullStream.next()) {
+        while (!is Finished element = stream.next()) {
             count++;
         }
         return Id(count);
     }
 
     shared actual
-    Application<IdType, Element> reduce<Element>(
+    Id<Element> reduce<Element>(
             Element partial,
             Element(Element, Element) accumulator,
-            Application<PullType, Element> stream) => nothing;
+            Pull<Element> stream) => nothing;
 }

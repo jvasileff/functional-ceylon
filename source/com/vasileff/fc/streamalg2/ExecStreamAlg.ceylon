@@ -1,13 +1,13 @@
 "Terminal Combinators"
 shared
-interface ExecStreamAlg<E, C> {
+interface ExecStreamAlg<E, C> given E<E> given C<E> {
     shared formal
-    Application<E, Integer> count<Element>(
-            Application<C, Element> stream);
+    E<Integer> count<Element>(
+            C<Element> stream);
 
     shared formal
-    Application<E, Element> reduce<Element>(
+    E<Element> reduce<Element>(
             Element identity,
             Element(Element, Element) accumulator,
-            Application<C,Element> stream);
+            C<Element> stream);
 }

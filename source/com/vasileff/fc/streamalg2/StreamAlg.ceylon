@@ -1,22 +1,22 @@
 "Intermediate Combinators"
 shared
-interface StreamAlg<C> {
+interface StreamAlg<C> given C<E> {
     shared formal
-    Application<C, Element> source<Element>(
+    C<Element> source<Element>(
             {Element*} array);
 
     shared formal
-    Application<C, Result> map<Element, Result>(
+    C<Result> map<Element, Result>(
             Result(Element) mapper,
-            Application<C,Element> stream);
+            C<Element> stream);
 
     shared formal
-    Application<C, Result> flatMap<Element, Result>(
-            Application<C, Result>(Element) mapper,
-            Application<C, Element> stream);
+    C<Result> flatMap<Element, Result>(
+            C<Result>(Element) mapper,
+            C<Element> stream);
 
     shared formal
-    Application<C, Element> filter<Element>(
+    C<Element> filter<Element>(
             Boolean(Element) predicate,
-            Application<C, Element> stream);
+            C<Element> stream);
 }
