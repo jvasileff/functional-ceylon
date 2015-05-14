@@ -4,11 +4,11 @@ class PushFactory()
         ExecStreamAlg<IdType, PushType> {
 
     shared actual
-    Push<T> source<T>({T*} array) => object
-            satisfies Push<T> {
+    Push<Element> source<Element>({Element*} array) => object
+            satisfies Push<Element> {
 
         shared actual
-        void invoke(Consumer<T> k)
+        void invoke(Consumer<Element> k)
             =>  array.each((e) => k(e));
     };
 

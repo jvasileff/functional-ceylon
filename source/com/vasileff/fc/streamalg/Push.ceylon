@@ -7,7 +7,7 @@ interface Push<Element>
 }
 
 shared
-alias Consumer<T> => Anything(T);
+alias Consumer<Element> => Anything(Element);
 
 "Marker interface for simulated type
  constructor polymorphism"
@@ -16,8 +16,8 @@ class PushType() {}
 
 "Unsafe narrowing operation; safe by convention"
 shared
-Push<T> narrowPush<T>
-        (Application<PushType, T> application) {
-    assert (is Push<T> application);
+Push<Element> narrowPush<Element>
+        (Application<PushType, Element> application) {
+    assert (is Push<Element> application);
     return application;
 }

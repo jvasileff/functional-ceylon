@@ -6,9 +6,9 @@ interface StreamAlg<C> {
             {Element*} array);
 
     shared formal
-    Application<C, Result> map<T, Result>(
-            Result(T) mapper,
-            Application<C,T> stream);
+    Application<C, Result> map<Element, Result>(
+            Result(Element) mapper,
+            Application<C,Element> stream);
 
     shared formal
     Application<C, Result> flatMap<Element, Result>(

@@ -6,10 +6,10 @@ class LoggingAdvice<E, C>(
 
     // Stream Alg Methods
     shared actual
-    Application<C, Result> map<T, Result>(
-            Result(T) mapper,
-            Application<C,T> stream)
-        =>  alg.map((T element) {
+    Application<C, Result> map<Element, Result>(
+            Result(Element) mapper,
+            Application<C,Element> stream)
+        =>  alg.map((Element element) {
                 value mapped = mapper(element);
                 print("map: ``element else "<null>"`` -> \
                       ``mapped else "<null>"``");

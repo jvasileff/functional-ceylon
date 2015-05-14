@@ -3,13 +3,13 @@ shared class PullFactory()
                   ExecStreamAlg<IdType, PullType> {
 
     shared actual
-    Pull<T> source<T>({T*} array) => object
-            satisfies Pull<T> {
+    Pull<Element> source<Element>({Element*} array) => object
+            satisfies Pull<Element> {
 
         value delegate = array.iterator();
 
         shared actual
-        T|Finished next() => delegate.next();
+        Element|Finished next() => delegate.next();
     };
 
     shared actual
