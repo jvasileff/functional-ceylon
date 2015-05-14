@@ -70,22 +70,24 @@ object enumeratees {
                 (Next<To, Out> inner)(Input<From> input)
             =>  step(collecting, inner)(input);
     };
+}
 
-    "Convenience Enumeratee to only process [[Next]] [[Iteratee]]s"
-    interface NextOnly<From, To> satisfies Enumeratee<From, To> {
+// TODO NextOnly move back into `enumeratees`; see
+// https://github.com/ceylon/ceylon-js/issues/549
+"Convenience Enumeratee to only process [[Next]] [[Iteratee]]s"
+interface NextOnly<From, To> satisfies Enumeratee<From, To> {
 
-        "When provided with [[inner]], produces a [[Consume]]. Defined
-         in curried form to simplify syntax for implementations."
-        shared formal
-        Iteratee<From, Iteratee<To, Out>> next<Out>
-                (Next<To, Out> inner)(Input<From> input);
+    "When provided with [[inner]], produces a [[Consume]]. Defined
+     in curried form to simplify syntax for implementations."
+    shared formal
+    Iteratee<From, Iteratee<To, Out>> next<Out>
+            (Next<To, Out> inner)(Input<From> input);
 
-        shared actual
-        Iteratee<From, Iteratee<To, Out>> apply<Out>(Iteratee<To, Out> inner)
-            =>  switch (it = inner of IterateeEnum<To, Out>)
-                case (is NextRaw)
-                    Next(next(it))
-                case (is DoneRaw | ErrorRaw)
-                    Done(inner, nil.input<From>());
-    }
+    shared actual
+    Iteratee<From, Iteratee<To, Out>> apply<Out>(Iteratee<To, Out> inner)
+        =>  switch (it = inner of IterateeEnum<To, Out>)
+            case (is NextRaw)
+                Next(next(it))
+            case (is DoneRaw | ErrorRaw)
+                Done(inner, nil.input<From>());
 }
