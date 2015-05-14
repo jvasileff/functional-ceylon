@@ -1,8 +1,8 @@
 shared
 class LoggingAdvice<E, C>(
-        ExecStreamAlg<E, C> & StreamAlg<C> alg)
-        satisfies StreamAlg<C> &
-                  ExecStreamAlg<E, C>
+        ExecStreamAlgebra<E, C> & StreamAlgebra<C> alg)
+        satisfies StreamAlgebra<C> &
+                  ExecStreamAlgebra<E, C>
         given E<E>
         given C<E> {
 

@@ -1,7 +1,7 @@
 shared
-class PushFactory()
-        satisfies StreamAlg<Push> &
-        ExecStreamAlg<Id, Push> {
+object pushAlgebra
+        satisfies StreamAlgebra<Push> &
+                  ExecStreamAlgebra<Id, Push> {
 
     shared actual
     Push<Element> source<Element>({Element*} array) => object

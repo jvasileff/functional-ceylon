@@ -1,6 +1,6 @@
 "Intermediate Combinators"
 shared
-interface StreamAlg<C> given C<E> {
+interface StreamAlgebra<C> given C<E> {
     shared formal
     C<Element> source<Element>(
             {Element*} array);

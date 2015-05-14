@@ -1,28 +1,26 @@
 import com.vasileff.fc.streamalg2 {
-    PushFactory,
     LoggingAdvice,
-    PullFactory
+    pushAlgebra,
+    pullAlgebra
 }
 
 shared
 void streamWithLogging() {
-    value pushAlg = PushFactory();
-    // same as pushAlg, but also logs:
-    value pushLoggingAlg = LoggingAdvice(pushAlg);
-    value x = pushLoggingAlg.map(Integer.successor,
-              pushAlg.filter(Integer.even,
-              pushAlg.source(0..10)));
+    // same as pushAlgebra, but also logs:
+    value pushLoggingAlgebra = LoggingAdvice(pushAlgebra);
+    value x = pushLoggingAlgebra.map(Integer.successor,
+              pushAlgebra.filter(Integer.even,
+              pushAlgebra.source(0..10)));
     x.invoke(print);
 
     //////
 
-    value pullAlg = PullFactory();
-    // same as pullAlg, but also logs:
-    value pullLoggingAlg = LoggingAdvice(pullAlg);
-    value y =   pullLoggingAlg.count(
-                pullLoggingAlg.map(Integer.successor,
-                pullAlg.filter(Integer.even,
-                pullAlg.source(0..10))))
+    // same as pullAlgebra, but also logs:
+    value pullLoggingAlgebra = LoggingAdvice(pullAlgebra);
+    value y =   pullLoggingAlgebra.count(
+                pullLoggingAlgebra.map(Integer.successor,
+                pullAlgebra.filter(Integer.even,
+                pullAlgebra.source(0..10))))
                 .element;
     print("The count is: ``y``");
 }

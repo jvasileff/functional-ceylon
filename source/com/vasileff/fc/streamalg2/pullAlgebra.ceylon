@@ -1,6 +1,6 @@
-shared class PullFactory()
-        satisfies StreamAlg<Pull> &
-                  ExecStreamAlg<Id, Pull> {
+shared object pullAlgebra
+        satisfies StreamAlgebra<Pull> &
+                  ExecStreamAlgebra<Id, Pull> {
 
     shared actual
     Pull<Element> source<Element>({Element*} array) => object
