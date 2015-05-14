@@ -8,7 +8,7 @@ object pushAlgebra
             satisfies Push<Element> {
 
         shared actual
-        void invoke(Consumer<Element> k)
+        void invoke(Anything(Element) k)
             =>  array.each((e) => k(e));
     };
 
@@ -19,7 +19,7 @@ object pushAlgebra
             satisfies Push<Result> {
 
         shared actual
-        void invoke(Consumer<Result> k)
+        void invoke(Anything(Result) k)
             =>  stream.invoke((element)
                 =>  k(mapper(element)));
     };
@@ -31,7 +31,7 @@ object pushAlgebra
             satisfies Push<Element> {
 
         shared actual
-        void invoke(Consumer<Element> k) {
+        void invoke(Anything(Element) k) {
             stream.invoke(void(e) {
                 if (predicate(e)) {
                     k(e);
