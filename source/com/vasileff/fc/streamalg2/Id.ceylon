@@ -1,3 +1,3 @@
-"A singleton"
+"An identity type for use with higher order generics"
 shared
-class Id<Element>(shared Element element) {}
+alias Id<Element> => Element;

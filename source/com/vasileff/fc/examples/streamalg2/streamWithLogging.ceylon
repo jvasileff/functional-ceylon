@@ -20,7 +20,6 @@ void streamWithLogging() {
     value y =   pullLoggingAlgebra.count(
                 pullLoggingAlgebra.map(Integer.successor,
                 pullAlgebra.filter(Integer.even,
-                pullAlgebra.source(0..10))))
-                .element;
+                pullAlgebra.source(0..10))));
     print("The count is: ``y``");
 }

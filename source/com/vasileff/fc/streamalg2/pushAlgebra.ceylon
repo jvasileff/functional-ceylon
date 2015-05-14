@@ -47,16 +47,16 @@ object pushAlgebra
         =>  nothing;
 
     shared actual
-    Id<Integer> count<Element>(
+    Integer count<Element>(
             Push<Element> stream) {
 
         variable value result = 0;
         stream.invoke((e) => result++);
-        return Id(result);
+        return result;
     }
 
     shared actual
-    Id<Element> reduce<Element>(
+    Element reduce<Element>(
             Element identity,
             Element(Element, Element) accumulator,
             Push<Element> stream) => nothing;

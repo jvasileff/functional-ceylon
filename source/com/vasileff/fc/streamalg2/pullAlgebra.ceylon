@@ -49,18 +49,18 @@ shared object pullAlgebra
         =>  nothing;
 
     shared actual
-    Id<Integer> count<Element>(
+    Integer count<Element>(
             Pull<Element> stream) {
 
         variable value count = 0;
         while (!is Finished element = stream.next()) {
             count++;
         }
-        return Id(count);
+        return count;
     }
 
     shared actual
-    Id<Element> reduce<Element>(
+    Element reduce<Element>(
             Element partial,
             Element(Element, Element) accumulator,
             Pull<Element> stream) => nothing;
