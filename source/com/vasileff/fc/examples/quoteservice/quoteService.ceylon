@@ -6,71 +6,11 @@ import ceylon.promise {
 import com.vasileff.ceylon.random.api {
     LCGRandom
 }
-
-///////////////////////////////////////
-// Functor interface
-///////////////////////////////////////
-
-shared
-interface Functor<F> given F<out E> {
-    shared formal
-    F<Out> map<In, Out>(F<In> source, Out(In) apply);
-}
-
-///////////////////////////////////////
-// Identity Functor
-///////////////////////////////////////
-
-shared
-alias Identity<out T> => T;
-
-shared
-object identityFunctor satisfies Functor<Identity> {
-    shared actual
-    Out map<In, Out>(In source, Out(In) apply)
-        =>  apply(source);
-}
-
-///////////////////////////////////////
-// Maybe Functor
-///////////////////////////////////////
-
-shared
-alias Maybe<out T> => T?;
-
-shared
-object maybeFunctor satisfies Functor<Maybe> {
-    shared actual
-    Out? map<In, Out>(In? source, Out(In) apply)
-        =>  if (exists source)
-            then apply(source)
-            else null;
-}
-
-///////////////////////////////////////
-// Sequential Functor
-///////////////////////////////////////
-
-shared
-object sequentialFunctor satisfies Functor<Sequential> {
-    shared actual
-    Sequential<Out> map<In, Out>
-            (Sequential<In> source,
-             Out(In) apply)
-        =>  source.collect(apply).sequence();
-}
-
-///////////////////////////////////////
-// Promise Functor
-///////////////////////////////////////
-
-shared
-object promiseFunctor satisfies Functor<Promise> {
-    shared actual
-    Promise<Out> map<In, Out>
-            (Promise<In> source,
-            Out(In) apply)
-        =>  source.map(apply);
+import com.vasileff.fc.core {
+    Functor,
+    identityFunctor,
+    sequentialFunctor,
+    promiseFunctor
 }
 
 ///////////////////////////////////////
