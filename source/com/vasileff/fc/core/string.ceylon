@@ -1,7 +1,8 @@
 shared
 object stringMonoid
         satisfies Monoid<String> &
-                  Equal<String> {
+                  Equal<String> &
+                  Compare<String> {
 
     shared actual
     String zero = "";
@@ -11,4 +12,7 @@ object stringMonoid
 
     shared actual
     Boolean equal(String x, String y) => x == y;
+
+    shared actual
+    Comparison compare(String x, String y) => x <=> y;
 }

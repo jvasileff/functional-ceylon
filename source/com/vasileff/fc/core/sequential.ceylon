@@ -37,3 +37,20 @@ class SequentialEqual<Element>
     Boolean equal(Element[] xs, Element[] ys)
         =>  corresponding(xs, ys, elementEqual.equal);
 }
+
+shared
+class SequentialOrder<Element>
+        (Compare<Element> elementCompare)
+        satisfies Compare<Sequential<Element>> {
+
+    shared actual
+    Comparison compare(Element[] xs, Element[] ys)
+        =>  if (nonempty xs, nonempty ys) then (
+                switch (c = elementCompare.compare(
+                                xs.first, ys.first))
+                case (equal) compare(xs.rest, ys.rest)
+                else c)
+            else if (nonempty xs) then larger
+            else if (nonempty ys) then smaller
+            else equal;
+}

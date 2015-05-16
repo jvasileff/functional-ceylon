@@ -1,7 +1,8 @@
 shared
 object integerPlusMonoid
         satisfies Monoid<Integer> &
-                  Equal<Integer> {
+                  Equal<Integer> &
+                  Compare<Integer> {
 
     shared actual
     Integer zero = 0;
@@ -11,12 +12,16 @@ object integerPlusMonoid
 
     shared actual
     Boolean equal(Integer x, Integer y) => x == y;
+
+    shared actual
+    Comparison compare(Integer x, Integer y) => x <=> y;
 }
 
 shared
 object integerTimesMonoid
         satisfies Monoid<Integer> &
-                  Equal<Integer> {
+                  Equal<Integer> &
+                  Compare<Integer> {
     shared actual
     Integer zero = 1;
 
@@ -25,4 +30,7 @@ object integerTimesMonoid
 
     shared actual
     Boolean equal(Integer x, Integer y) => x == y;
+
+    shared actual
+    Comparison compare(Integer x, Integer y) => x <=> y;
 }

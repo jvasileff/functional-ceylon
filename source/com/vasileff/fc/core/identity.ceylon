@@ -38,3 +38,13 @@ class IdentityEqual<Element>
     Boolean equal(Element x, Element y)
         =>  elementEqual.equal(x, y);
 }
+
+shared
+class IdentityCompare<Element>
+        (Compare<Element> elementCompare)
+        satisfies Compare<Identity<Element>> {
+
+    shared actual
+    Comparison compare(Element x, Element y)
+        =>  elementCompare.compare(x, y);
+}

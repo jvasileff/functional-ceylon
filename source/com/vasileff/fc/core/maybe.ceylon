@@ -45,3 +45,17 @@ class MaybeEqual<Element>
             then elementEqual.equal(x, y)
             else !x exists && !y exists;
 }
+
+shared
+class MaybeCompare<Element>
+        (Compare<Element> elementCompare)
+        satisfies Compare<Maybe<Element>> {
+
+    shared actual
+    Comparison compare(Element? x, Element? y)
+        =>  if (exists x, exists y) then
+                elementCompare.compare(x, y)
+            else if (exists x) then larger
+            else if (exists y) then smaller
+            else equal;
+}
