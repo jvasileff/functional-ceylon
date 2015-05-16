@@ -27,3 +27,13 @@ Monad<Sequential> sequentialMonad = sequentialTypeClass;
 
 shared
 Foldable<Sequential> sequentialFoldable = sequentialTypeClass;
+
+shared
+class SequentialEqual<Element>
+        (Equal<Element> elementEqual)
+        satisfies Equal<Sequential<Element>> {
+
+    shared actual
+    Boolean equal(Element[] xs, Element[] ys)
+        =>  corresponding(xs, ys, elementEqual.equal);
+}

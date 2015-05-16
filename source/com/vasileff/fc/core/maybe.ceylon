@@ -2,7 +2,10 @@ shared
 alias Maybe<out T> => T?;
 
 shared
-object maybeTypeClass satisfies Monad<Maybe> & Foldable<Maybe> {
+object maybeTypeClass
+        satisfies Monad<Maybe> &
+                  Foldable<Maybe> {
+
     shared actual
     Out? bind<In, Out>(In? source, Out?(In) apply)
         =>  if (exists source)
@@ -30,3 +33,15 @@ Monad<Maybe> maybeMonad = maybeTypeClass;
 
 shared
 Foldable<Maybe> maybeFoldable = maybeTypeClass;
+
+shared
+class MaybeEqual<Element>
+        (Equal<Element> elementEqual)
+        satisfies Equal<Maybe<Element>> {
+
+    shared actual
+    Boolean equal(Element? x, Element? y)
+        =>  if (exists x, exists y)
+            then elementEqual.equal(x, y)
+            else !x exists && !y exists;
+}
