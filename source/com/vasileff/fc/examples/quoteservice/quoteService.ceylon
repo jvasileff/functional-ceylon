@@ -8,8 +8,9 @@ import com.vasileff.ceylon.random.api {
 }
 
 ///////////////////////////////////////
-// FUNCTOR
+// Functor interface
 ///////////////////////////////////////
+
 shared
 interface Functor<F> given F<out E> {
     shared formal
@@ -17,102 +18,59 @@ interface Functor<F> given F<out E> {
 }
 
 ///////////////////////////////////////
-// MONAD
-///////////////////////////////////////
-
-shared
-interface Monad<M> satisfies Functor<M> given M<out E> {
-
-    shared formal
-    M<Out> unit<Out>(Out element);
-
-    shared formal
-    M<Out> bind<In, Out>(M<In> source, M<Out>(In) apply);
-
-    shared actual default
-    M<Out> map<In, Out>(M<In> source, Out(In) apply)
-        =>  bind<In, Out>(source, (x) => unit(apply(x)));
-}
-
-///////////////////////////////////////
-// Identity Monad
+// Identity Functor
 ///////////////////////////////////////
 
 shared
 alias Identity<out T> => T;
 
 shared
-object identityMonad satisfies Monad<Identity> {
+object identityFunctor satisfies Functor<Identity> {
     shared actual
-    Out bind<In, Out>(In source, Out(In) apply)
+    Out map<In, Out>(In source, Out(In) apply)
         =>  apply(source);
-
-    shared actual
-    Out unit<Out>(Out element)
-        =>  element;
 }
 
 ///////////////////////////////////////
-// Maybe Monad
+// Maybe Functor
 ///////////////////////////////////////
 
 shared
 alias Maybe<out T> => T?;
 
 shared
-object maybeMonad satisfies Monad<Maybe> {
+object maybeFunctor satisfies Functor<Maybe> {
     shared actual
-    Out? bind<In, Out>(In? source, Out?(In) apply)
+    Out? map<In, Out>(In? source, Out(In) apply)
         =>  if (exists source)
             then apply(source)
             else null;
-
-    shared actual
-    Out unit<Out>(Out element)
-        =>  element;
 }
 
 ///////////////////////////////////////
-// Sequential Monad
+// Sequential Functor
 ///////////////////////////////////////
 
 shared
-object sequentialMonad satisfies Monad<Sequential> {
+object sequentialFunctor satisfies Functor<Sequential> {
     shared actual
-    Sequential<Out> bind<In, Out>
+    Sequential<Out> map<In, Out>
             (Sequential<In> source,
-            Sequential<Out>(In) apply)
-        =>  source.flatMap(apply).sequence();
-
-    shared actual
-    Sequential<Out> unit<Out>(Out element)
-        =>  Singleton(element);
+             Out(In) apply)
+        =>  source.collect(apply).sequence();
 }
 
 ///////////////////////////////////////
-// Promise Monad
+// Promise Functor
 ///////////////////////////////////////
 
 shared
-object promiseMonad satisfies Monad<Promise> {
-    shared actual
-    Promise<Out> bind<In, Out>
-            (Promise<In> source,
-            Promise<Out>(In) apply)
-        =>  source.flatMap(apply);
-
+object promiseFunctor satisfies Functor<Promise> {
     shared actual
     Promise<Out> map<In, Out>
             (Promise<In> source,
             Out(In) apply)
         =>  source.map(apply);
-
-    shared actual
-    Promise<Out> unit<Out>(Out element) {
-        value deferred = Deferred<Out>();
-        deferred.fulfill(element);
-        return deferred.promise;
-    }
 }
 
 ///////////////////////////////////////
@@ -186,24 +144,24 @@ void run() {
     // degenerate case: uses an Identity container to
     // make quoteService act like a simple function
     // from Symbol to Quote
-    Quote ibmQuote = quoteService(identityMonad, "RHT");
-    print(ibmQuote); // RHT->100.0
+    Quote rhtQuote = quoteService(identityFunctor, "RHT");
+    print(rhtQuote); // RHT->100.0
 
     // Obtain multiple quotes at once,
     // from [Symbol*] to [Quote*]
-    [Quote*] quotes = quoteService(sequentialMonad, ["RHT", "IBM", "AAPL"]);
+    [Quote*] quotes = quoteService(sequentialFunctor, ["RHT", "IBM", "AAPL"]);
     print(quotes); // [RHT->100.0, IBM->100.0, AAPL->100.0]
 
     // obtain a quote *when* we know which one we need!
     // from Promise<Symbol> to Promise<Quote>
     Deferred<Symbol> deferred = Deferred<Symbol>();
-    Promise<Quote> promisedQuote = quoteService(promiseMonad, deferred.promise);
+    Promise<Quote> promisedQuote = quoteService(promiseFunctor, deferred.promise);
     promisedQuote.completed((quote) => print("Now we have it: ``quote``"));
     deferred.fulfill("FB"); // Now we have it: FB->100.0
 
     // obtain a bunch of quotes *when* we know which ones we need!
     // from Promise<[Symbol*]> to Promise<[Quote*]>
-    value promiseSequentialFunctor = SequentialTFunctor(promiseMonad);
+    value promiseSequentialFunctor = SequentialTFunctor(promiseFunctor);
     Deferred<[Symbol*]> deferredList = Deferred<[Symbol*]>();    
     Promise<[Quote*]> promisedQuotes = quoteService(
             promiseSequentialFunctor,
