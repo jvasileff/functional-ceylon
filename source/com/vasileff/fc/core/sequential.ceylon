@@ -1,7 +1,12 @@
+import ceylon.language {
+    emptySequence = empty
+}
+
 shared
 object sequentialTypeClass
         satisfies Monad<Sequential> &
-                  Foldable<Sequential> {
+                  Foldable<Sequential> &
+                  PlusEmpty<Sequential> {
     shared actual
     Sequential<Out> bind<In, Out>
             (Sequential<In> source,
@@ -17,6 +22,14 @@ object sequentialTypeClass
             (Element[] source, Result initial)
             (Result(Result, Element) accumulating)
         =>  source.fold(initial)(accumulating);
+
+    shared actual
+    Nothing[] empty
+        =>  emptySequence;
+
+    shared actual
+    <A|B>[] plus<A, B>(A[] as, B[] bs)
+        =>  as.append(bs);
 }
 
 shared
