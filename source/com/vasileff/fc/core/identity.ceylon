@@ -6,17 +6,17 @@ object identityTypeClass
         satisfies Monad<Identity> &
                   Foldable<Identity> {
     shared actual
-    Out bind<In, Out>(In source, Out(In) apply)
+    B bind<A, B>(A source, B(A) apply)
         =>  apply(source);
 
     shared actual
-    Out unit<Out>(Out element)
+    A unit<A>(A element)
         =>  element;
 
     shared actual
-    Result foldLeft<Result, Element>
-            (Identity<Element> source, Result initial)
-            (Result(Result, Element) accumulating)
+    B foldLeft<A, B>
+            (A source, B initial)
+            (B(B, A) accumulating)
         =>  accumulating(initial, source);
 
     shared actual
@@ -39,8 +39,8 @@ class IdentityEqual<Element>
         satisfies Equal<Identity<Element>> {
 
     shared actual
-    Boolean equal(Element x, Element y)
-        =>  elementEqual.equal(x, y);
+    Boolean equal(Element e1, Element e2)
+        =>  elementEqual.equal(e1, e2);
 }
 
 shared
@@ -49,6 +49,6 @@ class IdentityCompare<Element>
         satisfies Compare<Identity<Element>> {
 
     shared actual
-    Comparison compare(Element x, Element y)
-        =>  elementCompare.compare(x, y);
+    Comparison compare(Element e1, Element e2)
+        =>  elementCompare.compare(e1, e2);
 }

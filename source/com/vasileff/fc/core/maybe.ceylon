@@ -7,19 +7,19 @@ object maybeTypeClass
                   Foldable<Maybe> {
 
     shared actual
-    Out? bind<In, Out>(In? source, Out?(In) apply)
+    B? bind<A, B>(A? source, B?(A) apply)
         =>  if (exists source)
             then apply(source)
             else null;
 
     shared actual
-    Out unit<Out>(Out element)
+    A unit<A>(A element)
         =>  element;
 
     shared actual
-    Result foldLeft<Result, Element>
-            (Maybe<Element> source, Result initial)
-            (Result(Result, Element) accumulating)
+    B foldLeft<A, B>
+            (A? source, B initial)
+            (B(B, A) accumulating)
         =>  if (exists source)
             then accumulating(initial, source)
             else initial;
@@ -46,10 +46,10 @@ class MaybeEqual<Element>
         satisfies Equal<Maybe<Element>> {
 
     shared actual
-    Boolean equal(Element? x, Element? y)
-        =>  if (exists x, exists y)
-            then elementEqual.equal(x, y)
-            else !x exists && !y exists;
+    Boolean equal(Element? e1, Element? e2)
+        =>  if (exists e1, exists e2)
+            then elementEqual.equal(e1, e2)
+            else !e1 exists && !e2 exists;
 }
 
 shared
@@ -58,10 +58,10 @@ class MaybeCompare<Element>
         satisfies Compare<Maybe<Element>> {
 
     shared actual
-    Comparison compare(Element? x, Element? y)
-        =>  if (exists x, exists y) then
-                elementCompare.compare(x, y)
-            else if (exists x) then larger
-            else if (exists y) then smaller
+    Comparison compare(Element? e1, Element? e2)
+        =>  if (exists e1, exists e2) then
+                elementCompare.compare(e1, e2)
+            else if (exists e1) then larger
+            else if (exists e2) then smaller
             else equal;
 }

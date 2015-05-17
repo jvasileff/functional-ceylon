@@ -1,8 +1,8 @@
 shared
-interface Monoid<F> {
+interface Monoid<T> {
     shared formal
-    F zero;
+    T zero;
 
     shared formal
-    F append(F x, F y);
+    T append(T x, T y);
 }

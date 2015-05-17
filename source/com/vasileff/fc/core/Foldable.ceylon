@@ -1,8 +1,8 @@
 shared
-interface Foldable<F> given F<out E> {
+interface Foldable<Container> given Container<out E> {
     shared formal
-    Result foldLeft<Result, Element>
-            (F<Element> source,
-             Result initial)
-            (Result(Result, Element) accumulating);
+    B foldLeft<A, B>
+            (Container<A> source,
+             B initial)
+            (B(B, A) accumulating);
 }

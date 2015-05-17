@@ -1,9 +1,10 @@
 shared
-interface Functor<F> given F<out E> {
+interface Functor<Container> given Container<out E> {
+
     shared formal
-    F<Out> map<In, Out>(F<In> source, Out(In) apply);
+    Container<B> map<A, B>(Container<A> source, B(A) f);
 
     shared default
-    F<Out>(F<In>) lift<In, Out>(Out(In) apply)
-        =>  shuffle(curry(map<In,Out>))(apply);
+    Container<B>(Container<A>) lift<A, B>(B(A) f)
+        =>  shuffle(curry(map<A,B>))(f);
 }

@@ -6,20 +6,20 @@ import ceylon.promise {
 shared
 object promiseTypeClass satisfies Monad<Promise> {
     shared actual
-    Promise<Out> bind<In, Out>
-            (Promise<In> source,
-            Promise<Out>(In) apply)
+    Promise<B> bind<A, B>
+            (Promise<A> source,
+            Promise<B>(A) apply)
         =>  source.flatMap(apply);
 
     shared actual
-    Promise<Out> map<In, Out>
-            (Promise<In> source,
-            Out(In) apply)
+    Promise<B> map<A, B>
+            (Promise<A> source,
+            B(A) apply)
         =>  source.map(apply);
 
     shared actual
-    Promise<Out> unit<Out>(Out element) {
-        value deferred = Deferred<Out>();
+    Promise<A> unit<A>(A element) {
+        value deferred = Deferred<A>();
         deferred.fulfill(element);
         return deferred.promise;
     }

@@ -22,6 +22,7 @@ object integerTimesMonoid
         satisfies Monoid<Integer> &
                   Equal<Integer> &
                   Compare<Integer> {
+
     shared actual
     Integer zero = 1;
 

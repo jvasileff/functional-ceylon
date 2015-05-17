@@ -1,16 +1,18 @@
 shared
-interface Monad<M> satisfies Applicative<M> given M<out E> {
+interface Monad<Container>
+        satisfies Applicative<Container>
+        given Container<out E> {
 
     shared formal
-    M<Out> bind<In, Out>(M<In> source, M<Out>(In) apply);
+    Container<B> bind<A, B>(Container<A> source, Container<B>(A) apply);
 
     shared actual default
-    M<Out> map<In, Out>(M<In> source, Out(In) apply)
+    Container<B> map<A, B>(Container<A> source, B(A) apply)
         // TODO use compose after https://github.com/ceylon/ceylon-js/issues/553
-        //=>  bind(source, compose(unit<Out>, apply));
-        =>  bind<In, Out>(source, (x) => unit(apply(x)));
+        //=>  bind(source, compose(unit<B>, apply));
+        =>  bind<A, B>(source, (x) => unit(apply(x)));
 
     shared default
-    M<Out> join<Out>(M<M<Out>> source)
-        =>  bind<M<Out>, Out>(source, identity);
+    Container<A> join<A>(Container<Container<A>> source)
+        =>  bind<Container<A>, A>(source, identity);
 }
