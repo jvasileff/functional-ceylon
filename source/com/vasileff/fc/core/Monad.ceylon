@@ -1,8 +1,5 @@
 shared
-interface Monad<M> satisfies Functor<M> given M<out E> {
-
-    shared formal
-    M<Out> unit<Out>(Out element);
+interface Monad<M> satisfies Applicative<M> given M<out E> {
 
     shared formal
     M<Out> bind<In, Out>(M<In> source, M<Out>(In) apply);

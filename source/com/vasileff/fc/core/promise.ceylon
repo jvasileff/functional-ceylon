@@ -23,6 +23,13 @@ object promiseTypeClass satisfies Monad<Promise> {
         deferred.fulfill(element);
         return deferred.promise;
     }
+
+    shared actual
+    Promise<B> apply<A, B>(
+            Promise<A> container,
+            Promise<B(A)> f)
+        =>  container.and(f)
+                .map((f, a) => f(a));
 }
 
 shared

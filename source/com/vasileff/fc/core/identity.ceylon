@@ -18,6 +18,10 @@ object identityTypeClass
             (Identity<Element> source, Result initial)
             (Result(Result, Element) accumulating)
         =>  accumulating(initial, source);
+
+    shared actual
+    B apply<A, B>(A container, B(A) f)
+        =>  f(container);
 }
 
 shared

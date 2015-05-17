@@ -11,7 +11,11 @@ import com.vasileff.fc.core {
     promiseFunctor,
     PlusEmpty,
     Monad,
-    sequentialTypeClass
+    sequentialTypeClass,
+    promiseTypeClass,
+    Applicative,
+    identityTypeClass,
+    maybeTypeClass
 }
 
 shared
@@ -33,6 +37,35 @@ void functorExamples() {
     value promise = doubleToString<Promise>(promiseFunctor, deferred.promise);
     promise.completed((s) => print("From promise: " + s));
     deferred.fulfill(6);
+}
+
+shared
+void applicativeExamples() {
+    value f = [2.times, 3.plus];
+    value result = sequentialTypeClass.apply([1,2,3], f);
+    print(result); // [2, 4, 6, 4, 5, 6]
+
+    value deferredValue = Deferred<Integer>();
+    value deferredFunction = Deferred<Integer(Integer)>();
+    value promise = promiseTypeClass.apply(
+            deferredValue.promise, deferredFunction.promise);
+    promise.completed((Integer val) => print("final result: ``val``"));
+    deferredValue.fulfill(10);
+    deferredFunction.fulfill(2.times);
+
+    function doubleWithApplicative<Container>(
+            Applicative<Container> applicative,
+            Container<Integer> container)
+            given Container<out E>
+        =>  applicative.apply(container, applicative.unit(2.times));
+
+    print(doubleWithApplicative(identityTypeClass, 21));
+    print(doubleWithApplicative(maybeTypeClass, null));
+    print(doubleWithApplicative(sequentialTypeClass, 22..24));
+
+    // FIXME JavaScript bug; this doesn't work yet
+    //doubleWithApplicative(promiseTypeClass,
+    //        promiseTypeClass.unit(25)).completed(print);
 }
 
 shared

@@ -23,6 +23,12 @@ object maybeTypeClass
         =>  if (exists source)
             then accumulating(initial, source)
             else initial;
+
+    shared actual
+    B? apply<A, B>(A? container, B(A)? f)
+        =>  if (exists container, exists f)
+            then f(container)
+            else null;
 }
 
 shared

@@ -7,6 +7,7 @@ object sequentialTypeClass
         satisfies Monad<Sequential> &
                   Foldable<Sequential> &
                   PlusEmpty<Sequential> {
+
     shared actual
     Sequential<Out> bind<In, Out>
             (Sequential<In> source,
@@ -30,6 +31,12 @@ object sequentialTypeClass
     shared actual
     <A|B>[] plus<A, B>(A[] as, B[] bs)
         =>  as.append(bs);
+
+    shared actual
+    [B*] apply<A, B>([A*] container, [B(A)*] f)
+        =>  f.flatMap((B(A) f)
+            =>  container.map((A element)
+                =>  f(element))).sequence();
 }
 
 shared
