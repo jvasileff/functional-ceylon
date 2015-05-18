@@ -70,9 +70,7 @@ void coalesceExample() {
             MonadPlus<Container> monad,
             Container<Element> source)
             given Container<out E>
-        =>  // FIXME type inference for bind doesn't work without
-            // re-stating `bind` in `MonadPlus`
-            monad.bind(source, (Element e)
+        =>  monad.bind(source, (Element e)
             =>  if (exists e)
                 then monad.unit(e)
                 else monad.empty);
