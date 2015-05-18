@@ -31,9 +31,3 @@ object promiseTypeClass satisfies Monad<Promise> {
         =>  container.and(f)
                 .map((f, a) => f(a));
 }
-
-shared
-Functor<Promise> promiseFunctor = promiseTypeClass;
-
-shared
-Monad<Promise> promiseMonad = promiseTypeClass;

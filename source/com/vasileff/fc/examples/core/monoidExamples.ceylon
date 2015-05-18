@@ -2,11 +2,11 @@ import com.vasileff.fc.core {
     Monoid,
     Foldable,
     integerPlusMonoid,
-    sequentialFoldable,
     integerTimesMonoid,
-    maybeFoldable,
-    identityFoldable,
-    stringMonoid
+    stringMonoid,
+    sequentialTypeClass,
+    maybeTypeClass,
+    identityTypeClass
 }
 
 shared
@@ -20,24 +20,24 @@ void monoidExamples() {
                     (elements, monoid.zero)
                     (monoid.append);
 
-    assert(""     == sum(stringMonoid, sequentialFoldable, []));
-    assert("abcd" == sum(stringMonoid, sequentialFoldable, ["a","b","c","d"]));
+    assert(""     == sum(stringMonoid, sequentialTypeClass, []));
+    assert("abcd" == sum(stringMonoid, sequentialTypeClass, ["a","b","c","d"]));
 
-    assert(0  == sum(integerPlusMonoid, sequentialFoldable, []));
-    assert(10 == sum(integerPlusMonoid, sequentialFoldable, 1..4));
+    assert(0  == sum(integerPlusMonoid, sequentialTypeClass, []));
+    assert(10 == sum(integerPlusMonoid, sequentialTypeClass, 1..4));
 
-    assert(1  == sum(integerTimesMonoid, sequentialFoldable, []));
-    assert(24 == sum(integerTimesMonoid, sequentialFoldable, 1..4));
+    assert(1  == sum(integerTimesMonoid, sequentialTypeClass, []));
+    assert(24 == sum(integerTimesMonoid, sequentialTypeClass, 1..4));
 
-    assert(0 == sum(integerPlusMonoid, maybeFoldable, null));
-    assert(0 == sum(integerPlusMonoid, maybeFoldable, 0));
-    assert(5 == sum(integerPlusMonoid, maybeFoldable, 5));
+    assert(0 == sum(integerPlusMonoid, maybeTypeClass, null));
+    assert(0 == sum(integerPlusMonoid, maybeTypeClass, 0));
+    assert(5 == sum(integerPlusMonoid, maybeTypeClass, 5));
 
-    assert(1 == sum(integerTimesMonoid, maybeFoldable, null));
-    assert(0 == sum(integerTimesMonoid, maybeFoldable, 0));
-    assert(5 == sum(integerTimesMonoid, maybeFoldable, 5));
+    assert(1 == sum(integerTimesMonoid, maybeTypeClass, null));
+    assert(0 == sum(integerTimesMonoid, maybeTypeClass, 0));
+    assert(5 == sum(integerTimesMonoid, maybeTypeClass, 5));
 
-    assert(0 == sum(integerPlusMonoid, identityFoldable, 0));
+    assert(0 == sum(integerPlusMonoid, identityTypeClass, 0));
 
     //sum(integerAddMonoid, identityFoldable, null);
     // Argument must be assignable to parameter elements of sum:
@@ -48,7 +48,7 @@ void monoidExamples() {
             zero = 0.0;
             append = uncurry(Float.plus);
         };
-        foldable = sequentialFoldable;
+        foldable = sequentialTypeClass;
         elements = [1.0, 2.0, 3.0];
     });
 

@@ -39,15 +39,6 @@ object sequentialTypeClass
 }
 
 shared
-Functor<Sequential> sequentialFunctor = sequentialTypeClass;
-
-shared
-Monad<Sequential> sequentialMonad = sequentialTypeClass;
-
-shared
-Foldable<Sequential> sequentialFoldable = sequentialTypeClass;
-
-shared
 class SequentialEqual<Element>
         (Equal<Element> elementEqual)
         satisfies Equal<Sequential<Element>> {

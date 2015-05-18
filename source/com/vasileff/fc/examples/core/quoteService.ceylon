@@ -8,9 +8,9 @@ import com.vasileff.ceylon.random.api {
 }
 import com.vasileff.fc.core {
     Functor,
-    identityFunctor,
-    sequentialFunctor,
-    promiseFunctor
+    identityTypeClass,
+    sequentialTypeClass,
+    promiseTypeClass
 }
 
 ///////////////////////////////////////
@@ -84,24 +84,24 @@ void run() {
     // degenerate case: uses an Identity container to
     // make quoteService act like a simple function
     // from Symbol to Quote
-    Quote rhtQuote = quoteService(identityFunctor, "RHT");
+    Quote rhtQuote = quoteService(identityTypeClass, "RHT");
     print(rhtQuote); // RHT->100.0
 
     // Obtain multiple quotes at once,
     // from [Symbol*] to [Quote*]
-    [Quote*] quotes = quoteService(sequentialFunctor, ["RHT", "IBM", "AAPL"]);
+    [Quote*] quotes = quoteService(sequentialTypeClass, ["RHT", "IBM", "AAPL"]);
     print(quotes); // [RHT->100.0, IBM->100.0, AAPL->100.0]
 
     // obtain a quote *when* we know which one we need!
     // from Promise<Symbol> to Promise<Quote>
     Deferred<Symbol> deferred = Deferred<Symbol>();
-    Promise<Quote> promisedQuote = quoteService(promiseFunctor, deferred.promise);
+    Promise<Quote> promisedQuote = quoteService(promiseTypeClass, deferred.promise);
     promisedQuote.completed((quote) => print("Now we have it: ``quote``"));
     deferred.fulfill("FB"); // Now we have it: FB->100.0
 
     // obtain a bunch of quotes *when* we know which ones we need!
     // from Promise<[Symbol*]> to Promise<[Quote*]>
-    value promiseSequentialFunctor = SequentialTFunctor(promiseFunctor);
+    value promiseSequentialFunctor = SequentialTFunctor(promiseTypeClass);
     Deferred<[Symbol*]> deferredList = Deferred<[Symbol*]>();    
     Promise<[Quote*]> promisedQuotes = quoteService(
             promiseSequentialFunctor,

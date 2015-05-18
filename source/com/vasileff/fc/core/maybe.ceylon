@@ -32,15 +32,6 @@ object maybeTypeClass
 }
 
 shared
-Functor<Maybe> maybeFunctor = maybeTypeClass;
-
-shared
-Monad<Maybe> maybeMonad = maybeTypeClass;
-
-shared
-Foldable<Maybe> maybeFoldable = maybeTypeClass;
-
-shared
 class MaybeEqual<Element>
         (Equal<Element> elementEqual)
         satisfies Equal<Maybe<Element>> {

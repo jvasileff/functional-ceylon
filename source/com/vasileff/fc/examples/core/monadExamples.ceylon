@@ -5,19 +5,13 @@ import ceylon.promise {
 
 import com.vasileff.fc.core {
     Functor,
-    identityFunctor,
-    maybeFunctor,
-    sequentialFunctor,
-    promiseFunctor,
     Monad,
     sequentialTypeClass,
     promiseTypeClass,
     Applicative,
     identityTypeClass,
     maybeTypeClass,
-    MonadPlus,
-    identityMonad,
-    sequentialMonad
+    MonadPlus
 }
 
 shared
@@ -27,16 +21,16 @@ void functorExamples() {
             given F<out E>
         =>  f.map(source, (Integer i) => (i*2).string);
 
-    print(doubleToString(identityFunctor, 5));
+    print(doubleToString(identityTypeClass, 5));
 
-    print(doubleToString(maybeFunctor, 5));
-    print(doubleToString(maybeFunctor, null));
+    print(doubleToString(maybeTypeClass, 5));
+    print(doubleToString(maybeTypeClass, null));
 
-    print(doubleToString(sequentialFunctor, {1,2,3,4,5}.sequence()));
-    print(doubleToString(sequentialFunctor, 1:5));
+    print(doubleToString(sequentialTypeClass, {1,2,3,4,5}.sequence()));
+    print(doubleToString(sequentialTypeClass, 1:5));
 
     value deferred = Deferred<Integer>();
-    value promise = doubleToString<Promise>(promiseFunctor, deferred.promise);
+    value promise = doubleToString<Promise>(promiseTypeClass, deferred.promise);
     promise.completed((s) => print("From promise: " + s));
     deferred.fulfill(6);
 }
@@ -112,6 +106,6 @@ void liftExample() {
         =>  let (double = monad.lift(2.times))
             double(double(ints));
 
-    print(quadrupleWithLift(identityMonad, 2));
-    print(quadrupleWithLift(sequentialMonad, 2..5));
+    print(quadrupleWithLift(identityTypeClass, 2));
+    print(quadrupleWithLift(sequentialTypeClass, 2..5));
 }

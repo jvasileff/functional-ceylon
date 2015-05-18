@@ -25,15 +25,6 @@ object identityTypeClass
 }
 
 shared
-Functor<Identity> identityFunctor = identityTypeClass;
-
-shared
-Monad<Identity> identityMonad = identityTypeClass;
-
-shared
-Foldable<Identity> identityFoldable = identityTypeClass;
-
-shared
 class IdentityEqual<Element>
         (Equal<Element> elementEqual)
         satisfies Equal<Identity<Element>> {
