@@ -9,13 +9,13 @@ import com.vasileff.fc.core {
     maybeFunctor,
     sequentialFunctor,
     promiseFunctor,
-    PlusEmpty,
     Monad,
     sequentialTypeClass,
     promiseTypeClass,
     Applicative,
     identityTypeClass,
-    maybeTypeClass
+    maybeTypeClass,
+    MonadPlus
 }
 
 shared
@@ -70,26 +70,22 @@ void applicativeExamples() {
 
 shared
 void coalesceExample() {
-    // TODO simplify; see https://github.com/ceylon/ceylon-js/issues/556
     Container<Element&Object> coalesce<Container, Element>(
-            Monad<Container> monad, PlusEmpty<Container> plusEmpty,
-            //Monad<Container> & PlusEmpty<Container> typeClass,
+            MonadPlus<Container> monad,
             Container<Element> source)
             given Container<out E>
-        =>  //let (Monad<Container> monad = typeClass)
-            //let (PlusEmpty<Container> plusEmpty = typeClass)
+        =>  // FIXME type inference for bind doesn't work without
+            // re-stating `bind` in `MonadPlus`
             monad.bind(source, (Element e)
             =>  if (exists e)
                 then monad.unit(e)
-                else plusEmpty.empty);
+                else monad.empty);
 
     print(coalesce<Sequential, Integer?>(
-            sequentialTypeClass, sequentialTypeClass,
-            [1, 2, null, 3]));
+            sequentialTypeClass, [1, 2, null, 3]));
 
     print(coalesce<Sequential, Integer?>(
-            sequentialTypeClass, sequentialTypeClass,
-            [null]));
+            sequentialTypeClass, [null]));
 }
 
 shared
