@@ -15,7 +15,9 @@ import com.vasileff.fc.core {
     Applicative,
     identityTypeClass,
     maybeTypeClass,
-    MonadPlus
+    MonadPlus,
+    identityMonad,
+    sequentialMonad
 }
 
 shared
@@ -99,4 +101,17 @@ void flattenExample() {
     // TODO nope, doesn't work yet!!!
     print(flattenTest<Sequential, Integer>
         (sequentialTypeClass, [[1,2],[3,4]]));
+}
+
+shared
+void liftExample() {
+    function quadrupleWithLift<Container>(
+            Monad<Container> monad,
+            Container<Integer> ints)
+            given Container<out E>
+        =>  let (double = monad.lift(2.times))
+            double(double(ints));
+
+    print(quadrupleWithLift(identityMonad, 2));
+    print(quadrupleWithLift(sequentialMonad, 2..5));
 }
