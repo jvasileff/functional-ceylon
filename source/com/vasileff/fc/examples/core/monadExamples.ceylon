@@ -59,9 +59,8 @@ void applicativeExamples() {
     print(doubleWithApplicative(maybeTypeClass, null));
     print(doubleWithApplicative(sequentialTypeClass, 22..24));
 
-    // FIXME JavaScript bug; this doesn't work yet
-    //doubleWithApplicative(promiseTypeClass,
-    //        promiseTypeClass.unit(25)).completed(print);
+    doubleWithApplicative(promiseTypeClass,
+            promiseTypeClass.unit(25)).completed(print);
 }
 
 shared
