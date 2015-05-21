@@ -47,8 +47,8 @@ class SequentialTFunctor<Outer>
         =>  SequentialT<Outer, Element>;
 
     shared actual
-    SequentialT<Outer, Out> map<In, Out>
-            (ST<In> source, Out(In) apply)
+    SequentialT<Outer, B> map<A, B>
+            (ST<A> source, B(A) apply)
         =>  source.map(apply);
 
     shared
@@ -102,7 +102,7 @@ void run() {
     // obtain a bunch of quotes *when* we know which ones we need!
     // from Promise<[Symbol*]> to Promise<[Quote*]>
     value promiseSequentialFunctor = SequentialTFunctor(promiseTypeClass);
-    Deferred<[Symbol*]> deferredList = Deferred<[Symbol*]>();    
+    Deferred<[Symbol*]> deferredList = Deferred<[Symbol*]>();
     Promise<[Quote*]> promisedQuotes = quoteService(
             promiseSequentialFunctor,
             promiseSequentialFunctor
