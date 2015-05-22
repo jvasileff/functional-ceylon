@@ -1,8 +1,8 @@
 shared
-interface PlusEmpty<Container>
-        satisfies Plus<Container>
-        given Container<out E> {
+interface PlusEmpty<Box>
+        satisfies Plus<Box>
+        given Box<out E> {
 
     shared formal
-    Container<Nothing> empty;
+    Box<Nothing> empty;
 }

@@ -11,7 +11,8 @@ import com.vasileff.fc.core {
     Applicative,
     identityTypeClass,
     maybeTypeClass,
-    MonadPlus
+    MonadPlus,
+    Foldable
 }
 
 shared
@@ -79,6 +80,34 @@ void coalesceExample() {
 
     print(coalesce<Sequential, Integer?>(
             sequentialTypeClass, [null]));
+}
+
+shared
+void wrapperExample() {
+    // with wrapper
+    print(sequentialTypeClass.foldableWrapper([1,2,3])
+            .map(2.times)
+            .map(2.plus)
+            .foldLeft(0)(plus));
+
+    // without wrapper
+    value tc = sequentialTypeClass;
+    print(tc.foldLeft(
+        tc.map(tc.map(
+            [1,2,3],
+            2.times),
+            2.plus),
+        0)(plus));
+
+    F<String> doubleToString<F>
+            (Functor<F> & Foldable<F> f, F<Integer> source)
+            given F<out E>
+        =>  f.wrap(source)
+                .map(2.times)
+                .map(Object.string)
+                .unwrapped;
+
+    print(doubleToString(sequentialTypeClass, 1:5));
 }
 
 shared

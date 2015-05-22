@@ -1,5 +1,5 @@
 shared
-interface ApplicativePlus<Container>
-        satisfies Applicative<Container> &
-                  PlusEmpty<Container>
-        given Container<out E> {}
+interface ApplicativePlus<Box>
+        satisfies Applicative<Box> &
+                  PlusEmpty<Box>
+        given Box<out E> {}

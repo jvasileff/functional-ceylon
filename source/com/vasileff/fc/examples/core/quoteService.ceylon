@@ -52,7 +52,7 @@ class SequentialTFunctor<Outer>
         =>  source.map(apply);
 
     shared
-    SequentialT<Outer, Element> wrap<Element>
+    SequentialT<Outer, Element> wrapOuter<Element>
             (Outer<Element[]> source)
         =>  SequentialT<Outer, Element>
                        (outerFunctor, source);
@@ -108,8 +108,9 @@ void run() {
     // give ST credit for being covariant in Element?
     Promise<[Quote*]> promisedQuotes = quoteService<SequentialTFunctor<Promise>.ST>(
             promiseSequentialFunctor,
-            promiseSequentialFunctor
-                .wrap(deferredList.promise)).unwrapped;
+            promiseSequentialFunctor.wrapOuter(
+                deferredList.promise)
+        ).unwrapped;
     promisedQuotes.completed((quotes) => print("Now we have them: ``quotes``"));
     deferredList.fulfill(["TWTR", "EBAY"]); // JS Compiler meltdown!
 }
