@@ -20,7 +20,7 @@ void functorExamples() {
     F<String> doubleToString<F>
             (Functor<F> f, F<Integer> source)
             given F<out E>
-        =>  f.map(source, (Integer i) => (i*2).string);
+        =>  f.map(source, compose(Integer.string, 2.times));
 
     print(doubleToString(identityTypeClass, 5));
 
@@ -93,8 +93,7 @@ void wrapperExample() {
     // without wrapper
     value tc = sequentialTypeClass;
     print(tc.foldLeft(
-        tc.map(tc.map(
-            [1,2,3],
+        tc.map(tc.map([1,2,3],
             2.times),
             2.plus),
         0)(plus));
@@ -103,8 +102,7 @@ void wrapperExample() {
             (Functor<F> & Foldable<F> f, F<Integer> source)
             given F<out E>
         =>  f.wrap(source)
-                .map(2.times)
-                .map(Object.string)
+                .map(2.times).map(Object.string)
                 .unwrapped;
 
     print(doubleToString(sequentialTypeClass, 1:5));
