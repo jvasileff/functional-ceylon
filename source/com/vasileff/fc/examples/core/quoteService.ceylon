@@ -103,7 +103,10 @@ void run() {
     // from Promise<[Symbol*]> to Promise<[Quote*]>
     value promiseSequentialFunctor = SequentialTFunctor(promiseTypeClass);
     Deferred<[Symbol*]> deferredList = Deferred<[Symbol*]>();
-    Promise<[Quote*]> promisedQuotes = quoteService(
+
+    // FIXME look into type inference? Seems like inference is correct, but doesn't
+    // give ST credit for being covariant in Element?
+    Promise<[Quote*]> promisedQuotes = quoteService<SequentialTFunctor<Promise>.ST>(
             promiseSequentialFunctor,
             promiseSequentialFunctor
                 .wrap(deferredList.promise)).unwrapped;
