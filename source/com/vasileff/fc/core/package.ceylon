@@ -1,1 +1,1 @@
-package com.vasileff.fc.core;
+shared package com.vasileff.fc.core;

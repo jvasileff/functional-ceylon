@@ -17,18 +17,22 @@
     <moduleset id="modules.js">
         <module name="com.vasileff.fc"/>
     </moduleset>
+    <moduleset id="modules.test.js">
+        <module name="test.com.vasileff.fc"/>
+    </moduleset>
 
     <target name="all" depends="compile, doc"/>
 
     <target name="compile">
         <ceylon-compile-js encoding="${source.encoding}">
             <moduleset refid="modules.js"/>
+            <moduleset refid="modules.test.js"/>
         </ceylon-compile-js>
     </target>
 
     <target name="test" depends="compile">
         <ceylon-test-js report="true">
-            <moduleset refid="modules.js"/>
+            <moduleset refid="modules.test.js"/>
         </ceylon-test-js>
     </target>
 
