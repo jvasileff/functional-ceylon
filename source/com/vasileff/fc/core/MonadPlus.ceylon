@@ -4,21 +4,13 @@ interface MonadPlus<Box>
                   ApplicativePlus<Box>
         given Box<out E> {
 
+    // TODO consider reverting to using an anonymous class
+    // after https://github.com/ceylon/ceylon-spec/issues/1310
     shared actual default
-    MonadPlusWrapper<Box, A> wrap<A>(Box<A> unwrapped)
-        =>  let (tc = this, uw = unwrapped)
-            object satisfies MonadPlusWrapper<Box, A> {
-
-        shared actual
-        MonadPlus<Box> typeClass => tc;
-
-        shared actual
-        Box<A> unwrapped => uw;
-
-        shared actual
-        MonadPlusWrapper<Box, E> wrap<E>(Box<E> wrapped)
-            =>  outer.wrap(wrapped);
-    };
+    MonadPlusWrapper<Box, A> wrap<A>
+            (Box<A> unwrapped)
+        =>  MonadPlusWrapperImpl<Box, A>
+                (this, unwrapped);
 }
 
 shared
@@ -34,3 +26,14 @@ interface MonadPlusWrapper<Box, out A>
         satisfies MonadWrapper<Box, A>
             & MonadOpsMixin<Box, A, MonadPlusWrapper>
         given Box<out E> {}
+
+class MonadPlusWrapperImpl<Box, A>(
+        shared actual MonadPlus<Box> typeClass,
+        shared actual Box<A> unwrapped)
+        satisfies MonadPlusWrapper<Box, A>
+        given Box<out E> {
+
+    shared actual
+    MonadPlusWrapper<Box, E> wrap<E>(Box<E> wrapped)
+        =>  MonadPlusWrapperImpl<Box, E>(typeClass, wrapped);
+}

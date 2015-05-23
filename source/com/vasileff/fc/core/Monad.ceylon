@@ -14,21 +14,13 @@ interface Monad<Box>
     Box<A> join<A>(Box<Box<A>> source)
         =>  bind<Box<A>, A>(source, identity);
 
+    // TODO consider reverting to using an anonymous class
+    // after https://github.com/ceylon/ceylon-spec/issues/1310
     shared actual default
-    MonadWrapper<Box, A> wrap<A>(Box<A> unwrapped)
-        =>  let (tc = this, uw = unwrapped)
-            object satisfies MonadWrapper<Box, A> {
-
-        shared actual
-        Monad<Box> typeClass => tc;
-
-        shared actual
-        Box<A> unwrapped => uw;
-
-        shared actual
-        MonadWrapper<Box, E> wrap<E>(Box<E> wrapped)
-            =>  outer.wrap(wrapped);
-    };
+    MonadWrapper<Box, A> wrap<A>
+            (Box<A> unwrapped)
+        =>  MonadWrapperImpl<Box, A>
+                (this, unwrapped);
 }
 
 shared
@@ -49,3 +41,14 @@ interface MonadWrapper<Box, out A>
         satisfies ApplicativeWrapper<Box, A>
             & MonadOpsMixin<Box, A, MonadWrapper>
         given Box<out E> {}
+
+class MonadWrapperImpl<Box, A>(
+        shared actual Monad<Box> typeClass,
+        shared actual Box<A> unwrapped)
+        satisfies MonadWrapper<Box, A>
+        given Box<out E> {
+
+    shared actual
+    MonadWrapper<Box, E> wrap<E>(Box<E> wrapped)
+        =>  MonadWrapperImpl<Box, E>(typeClass, wrapped);
+}
