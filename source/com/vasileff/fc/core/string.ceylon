@@ -1,8 +1,8 @@
 shared
 object stringMonoid
-        satisfies Monoid<String> &
-                  Equal<String> &
-                  Compare<String> {
+        satisfies Monoid<String>
+            & Equal<String>
+            & Compare<String> {
 
     shared actual
     String zero = "";

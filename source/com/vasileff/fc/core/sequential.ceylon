@@ -4,8 +4,8 @@ import ceylon.language {
 
 shared
 object sequentialTypeClass
-        satisfies MonadPlus<Sequential> &
-                  Foldable<Sequential> {
+        satisfies MonadPlus<Sequential>
+            & Foldable<Sequential> {
 
     shared actual
     Sequential<B> bind<A, B>

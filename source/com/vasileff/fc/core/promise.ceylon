@@ -4,7 +4,9 @@ import ceylon.promise {
 }
 
 shared
-object promiseTypeClass satisfies Monad<Promise> {
+object promiseTypeClass
+        satisfies Monad<Promise> {
+
     shared actual
     Promise<B> bind<A, B>
             (Promise<A> source,

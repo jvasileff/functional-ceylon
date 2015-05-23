@@ -1,5 +1,7 @@
 shared
-interface Foldable<Box> given Box<out E> {
+interface Foldable<Box>
+        given Box<out E> {
+
     shared formal
     B foldLeft<A, B>
             (Box<A> source,

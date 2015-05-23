@@ -1,7 +1,7 @@
 shared
 interface MonadPlus<Box>
-        satisfies Monad<Box> &
-                  ApplicativePlus<Box>
+        satisfies Monad<Box>
+            & ApplicativePlus<Box>
         given Box<out E> {
 
     // TODO consider reverting to using an anonymous class

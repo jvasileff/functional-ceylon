@@ -1,8 +1,8 @@
 shared
 object integerPlusMonoid
-        satisfies Monoid<Integer> &
-                  Equal<Integer> &
-                  Compare<Integer> {
+        satisfies Monoid<Integer>
+            & Equal<Integer>
+            & Compare<Integer> {
 
     shared actual
     Integer zero = 0;
@@ -19,9 +19,9 @@ object integerPlusMonoid
 
 shared
 object integerTimesMonoid
-        satisfies Monoid<Integer> &
-                  Equal<Integer> &
-                  Compare<Integer> {
+        satisfies Monoid<Integer>
+            & Equal<Integer>
+            & Compare<Integer> {
 
     shared actual
     Integer zero = 1;

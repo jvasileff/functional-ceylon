@@ -22,8 +22,8 @@ interface Applicative<Box>
 
 shared
 interface ApplicativeOpsMixin<Box, out A, out Self>
-        satisfies Wrapper<Box, A, Self, Applicative> &
-                  FunctorOpsMixin<Box, A, Self>
+        satisfies Wrapper<Box, A, Self, Applicative>
+            & FunctorOpsMixin<Box, A, Self>
         given Box<out E>
         given Self<C, El> given C<out E2> {
 

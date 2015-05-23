@@ -1,5 +1,6 @@
 shared
-interface Plus<Box> given Box<out E> {
+interface Plus<Box>
+        given Box<out E> {
 
     shared formal
     Box<A|B> plus<A, B>
