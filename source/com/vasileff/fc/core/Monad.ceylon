@@ -12,7 +12,9 @@ interface Monad<Box>
 
     shared default
     Box<A> join<A>(Box<Box<A>> source)
-        =>  bind<Box<A>, A>(source, identity);
+        // FIXME JavaScript bug; see [[flattenExample]]
+        //=>  bind<Box<A>, A>(source, identity);
+        =>  bind<Box<A>, A>(source, (Box<A> a) => a);
 
     // TODO consider reverting to using an anonymous class
     // after https://github.com/ceylon/ceylon-spec/issues/1310

@@ -2,6 +2,10 @@ import ceylon.promise {
     Deferred,
     Promise
 }
+import ceylon.test {
+    test,
+    assertEquals
+}
 
 import com.vasileff.fc.core {
     Functor,
@@ -15,38 +19,45 @@ import com.vasileff.fc.core {
     Foldable
 }
 
-shared
+shared test
 void functorExamples() {
     F<String> doubleToString<F>
             (Functor<F> f, F<Integer> source)
             given F<out E>
         =>  f.map(source, compose(Integer.string, 2.times));
 
-    print(doubleToString(identityTypeClass, 5));
+    assertEquals(doubleToString(identityTypeClass, 5), "10");
 
-    print(doubleToString(maybeTypeClass, 5));
-    print(doubleToString(maybeTypeClass, null));
+    assertEquals(doubleToString(maybeTypeClass, 5), "10");
+    assertEquals(doubleToString(maybeTypeClass, null), null);
 
-    print(doubleToString(sequentialTypeClass, {1,2,3,4,5}.sequence()));
-    print(doubleToString(sequentialTypeClass, 1:5));
+    assertEquals(doubleToString(sequentialTypeClass,
+            {1,2,3,4,5}.sequence()),
+            ["2","4","6","8","10"]);
+
+    assertEquals(doubleToString(sequentialTypeClass,
+            1:5),
+            ["2","4","6","8","10"]);
 
     value deferred = Deferred<Integer>();
-    value promise = doubleToString<Promise>(promiseTypeClass, deferred.promise);
-    promise.completed((s) => print("From promise: " + s));
+    value promise = doubleToString<Promise>
+            (promiseTypeClass, deferred.promise);
+    promise.completed((s) => assertEquals(s, "12"));
     deferred.fulfill(6);
 }
 
-shared
+shared test
 void applicativeExamples() {
     value f = [2.times, 3.plus];
-    value result = sequentialTypeClass.apply([1,2,3], f);
-    print(result); // [2, 4, 6, 4, 5, 6]
+    assertEquals(sequentialTypeClass.apply([1,2,3], f),
+            [2, 4, 6, 4, 5, 6]);
 
     value deferredValue = Deferred<Integer>();
     value deferredFunction = Deferred<Integer(Integer)>();
     value promise = promiseTypeClass.apply(
             deferredValue.promise, deferredFunction.promise);
-    promise.completed((Integer val) => print("final result: ``val``"));
+    promise.completed((i)
+        =>  assertEquals(i, 20));
     deferredValue.fulfill(10);
     deferredFunction.fulfill(2.times);
 
@@ -56,15 +67,21 @@ void applicativeExamples() {
             given Container<out E>
         =>  applicative.apply(container, applicative.unit(2.times));
 
-    print(doubleWithApplicative(identityTypeClass, 21));
-    print(doubleWithApplicative(maybeTypeClass, null));
-    print(doubleWithApplicative(sequentialTypeClass, 22..24));
+    assertEquals(doubleWithApplicative
+            (identityTypeClass, 21), 42);
+
+    assertEquals(doubleWithApplicative
+            (maybeTypeClass, null), null);
+
+    assertEquals(doubleWithApplicative
+            (sequentialTypeClass, 22..24), [44,46,48]);
 
     doubleWithApplicative(promiseTypeClass,
-            promiseTypeClass.unit(25)).completed(print);
+            promiseTypeClass.unit(25)).completed((i)
+                =>  assertEquals(i, 50));
 }
 
-shared
+shared test
 void coalesceExample() {
     Container<Element&Object> coalesce<Container, Element>(
             MonadPlus<Container> monad,
@@ -75,28 +92,30 @@ void coalesceExample() {
                 then monad.unit(e)
                 else monad.empty);
 
-    print(coalesce<Sequential, Integer?>(
-            sequentialTypeClass, [1, 2, null, 3]));
+    assertEquals(coalesce<Sequential, Integer?>
+            (sequentialTypeClass, [1, 2, null, 3]),
+            [1,2,3]);
 
-    print(coalesce<Sequential, Integer?>(
-            sequentialTypeClass, [null]));
+    assertEquals(coalesce<Sequential, Integer?>
+            (sequentialTypeClass, [null]),
+            []);
 }
 
-shared
+shared test
 void wrapperExample() {
     // with wrapper
-    print(sequentialTypeClass.foldableWrapper([1,2,3])
+    assertEquals(sequentialTypeClass.foldableWrapper([1,2,3])
             .map(2.times)
             .map(2.plus)
-            .foldLeft(0)(plus));
+            .foldLeft(0)(plus), 18);
 
     // without wrapper
     value tc = sequentialTypeClass;
-    print(tc.foldLeft(
+    assertEquals(tc.foldLeft(
         tc.map(tc.map([1,2,3],
             2.times),
             2.plus),
-        0)(plus));
+        0)(plus), 18);
 
     F<String> doubleToString<F>
             (Functor<F> & Foldable<F> f, F<Integer> source)
@@ -105,10 +124,12 @@ void wrapperExample() {
                 .map(2.times).map(Object.string)
                 .unwrapped;
 
-    print(doubleToString(sequentialTypeClass, 1:5));
+    assertEquals(doubleToString
+            (sequentialTypeClass, 1:5),
+            ["2","4","6","8","10"]);
 }
 
-shared
+shared test
 void flattenExample() {
     Container<Element> flattenTest<Container, Element>(
             Monad<Container> monad,
@@ -116,12 +137,15 @@ void flattenExample() {
             given Container<out E>
         =>  monad.join(source);
 
-    // TODO nope, doesn't work yet!!!
-    print(flattenTest<Sequential, Integer>
-        (sequentialTypeClass, [[1,2],[3,4]]));
+    assertEquals(sequentialTypeClass.join([[1,2],[3,4]]),
+            [1,2,3,4]);
+
+    assertEquals(flattenTest<Sequential, Integer>
+            (sequentialTypeClass, [[1,2],[3,4]]),
+            [1,2,3,4]);
 }
 
-shared
+shared test
 void liftExample() {
     function quadrupleWithLift<Container>(
             Monad<Container> monad,
@@ -130,6 +154,9 @@ void liftExample() {
         =>  let (double = monad.lift(2.times))
             double(double(ints));
 
-    print(quadrupleWithLift(identityTypeClass, 2));
-    print(quadrupleWithLift(sequentialTypeClass, 2..5));
+    assertEquals(quadrupleWithLift
+            (identityTypeClass, 2), 8);
+
+    assertEquals(quadrupleWithLift
+            (sequentialTypeClass, 2..5), [8,12,16,20]);
 }

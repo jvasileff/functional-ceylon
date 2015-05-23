@@ -1,3 +1,8 @@
+import ceylon.test {
+    test,
+    assertEquals
+}
+
 import com.vasileff.fc.core {
     Monoid,
     Foldable,
@@ -9,7 +14,7 @@ import com.vasileff.fc.core {
     identityTypeClass
 }
 
-shared
+shared test
 void monoidExamples() {
     function sum<Container, Element>(
             Monoid<Element> monoid,
@@ -20,37 +25,34 @@ void monoidExamples() {
                     (elements, monoid.zero)
                     (monoid.append);
 
-    assert(""     == sum(stringMonoid, sequentialTypeClass, []));
-    assert("abcd" == sum(stringMonoid, sequentialTypeClass, ["a","b","c","d"]));
+    assertEquals(sum(stringMonoid, sequentialTypeClass, []), "");
+    assertEquals(sum(stringMonoid, sequentialTypeClass, ["a","b","c","d"]), "abcd");
 
-    assert(0  == sum(integerPlusMonoid, sequentialTypeClass, []));
-    assert(10 == sum(integerPlusMonoid, sequentialTypeClass, 1..4));
+    assertEquals(sum(integerPlusMonoid, sequentialTypeClass, []), 0);
+    assertEquals(sum(integerPlusMonoid, sequentialTypeClass, 1..4), 10);
 
-    assert(1  == sum(integerTimesMonoid, sequentialTypeClass, []));
-    assert(24 == sum(integerTimesMonoid, sequentialTypeClass, 1..4));
+    assertEquals(sum(integerTimesMonoid, sequentialTypeClass, []), 1);
+    assertEquals(sum(integerTimesMonoid, sequentialTypeClass, 1..4), 24);
 
-    assert(0 == sum(integerPlusMonoid, maybeTypeClass, null));
-    assert(0 == sum(integerPlusMonoid, maybeTypeClass, 0));
-    assert(5 == sum(integerPlusMonoid, maybeTypeClass, 5));
+    assertEquals(sum(integerPlusMonoid, maybeTypeClass, null), 0);
+    assertEquals(sum(integerPlusMonoid, maybeTypeClass, 0), 0);
+    assertEquals(sum(integerPlusMonoid, maybeTypeClass, 5), 5);
 
-    assert(1 == sum(integerTimesMonoid, maybeTypeClass, null));
-    assert(0 == sum(integerTimesMonoid, maybeTypeClass, 0));
-    assert(5 == sum(integerTimesMonoid, maybeTypeClass, 5));
+    assertEquals(sum(integerTimesMonoid, maybeTypeClass, null), 1);
+    assertEquals(sum(integerTimesMonoid, maybeTypeClass, 0), 0);
+    assertEquals(sum(integerTimesMonoid, maybeTypeClass, 5), 5);
 
-    assert(0 == sum(integerPlusMonoid, identityTypeClass, 0));
+    assertEquals(sum(integerPlusMonoid, identityTypeClass, 0), 0);
 
-    //sum(integerAddMonoid, identityFoldable, null);
-    // Argument must be assignable to parameter elements of sum:
-    // null is not assignable to Identity<Integer>
+    // Not allowed, good: null is not assignable to Identity<Integer> (Integer)
+    //sum(integerPlusMonoid, identityTypeClass, null);
 
-    assert(6.0 == sum {
+    assertEquals(sum {
         object satisfies Monoid<Float> {
             zero = 0.0;
             append = uncurry(Float.plus);
         };
         foldable = sequentialTypeClass;
         elements = [1.0, 2.0, 3.0];
-    });
-
-    print("done");
+    }, 6.0);
 }
