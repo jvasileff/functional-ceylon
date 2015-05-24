@@ -86,10 +86,8 @@ void intercalate() {
             integerTimesMonoid, null, 10), 1);
 
     assertEquals(String(sequentialTypeClass.intercalate(
-            SequentialMonoid<Character>(),
-            ["Say".sequence(), "more,".sequence(),
-             "more".sequence(), "clearly".sequence()],
-            " ".sequence())),
+            stringMonoid,
+            ["Say", "more,", "more", "clearly"], " ")),
             "Say more, more clearly");
 
     // with wrapper
