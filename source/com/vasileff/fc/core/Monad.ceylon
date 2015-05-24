@@ -26,7 +26,7 @@ interface Monad<Box>
 }
 
 shared
-interface MonadOpsMixin<Box, out A, out Self>
+interface MonadOpsMixin<Box, A, out Self>
         satisfies Wrapper<Box, A, Self, Monad>
             & ApplicativeOpsMixin<Box, A, Self>
         given Box<out E>
@@ -39,7 +39,7 @@ interface MonadOpsMixin<Box, out A, out Self>
 }
 
 shared
-interface MonadWrapper<Box, out A>
+interface MonadWrapper<Box, A>
         satisfies ApplicativeWrapper<Box, A>
             & MonadOpsMixin<Box, A, MonadWrapper>
         given Box<out E> {}

@@ -19,7 +19,7 @@ interface Foldable<Box>
 }
 
 shared
-interface FoldableOpsMixin<Box, out A, Self>
+interface FoldableOpsMixin<Box, A, Self>
         satisfies Wrapper<Box, A, Self, Foldable>
         given Box<out E>
         given Self<C, El> given C<out E2> {
@@ -28,14 +28,13 @@ interface FoldableOpsMixin<Box, out A, Self>
     B foldLeft<B>(B initial)(B(B, A) accumulating)
         =>  typeClass.foldLeft(unwrapped, initial)(accumulating);
 
-    // FIXME FoldableOpsMixin can't be covariant in A!
-    //shared default
-    //A intercalate(Monoid<A> monoid, A item)
-    //    =>  typeClass.intercalate(monoid, unwrapped, item);
+    shared default
+    A intercalate(Monoid<A> monoid, A item)
+        =>  typeClass.intercalate(monoid, unwrapped, item);
 }
 
 shared
-interface FoldableMonadPlusWrapper<Box, out A>
+interface FoldableMonadPlusWrapper<Box, A>
         satisfies MonadWrapper<Box, A>
             & MonadOpsMixin<Box, A, FoldableMonadPlusWrapper>
             & FoldableOpsMixin<Box, A, FoldableMonadPlusWrapper>

@@ -84,4 +84,14 @@ void intercalate() {
 
     assertEquals(maybeTypeClass.intercalate<Integer>(
             integerTimesMonoid, null, 10), 1);
+
+    // with wrapper
+
+    assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
+            ([[1],[2],[3]])
+                .map(([Integer*] xs)
+                    => sequentialTypeClass.map(xs, 2.times))
+                .intercalate(
+                    SequentialMonoid<Integer>(), [5]),
+            [2, 5, 4, 5, 6]);
 }

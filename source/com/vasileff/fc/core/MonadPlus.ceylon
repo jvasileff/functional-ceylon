@@ -14,7 +14,7 @@ interface MonadPlus<Box>
 }
 
 shared
-interface MonadPlusOpsMixin<Box, out A, Self>
+interface MonadPlusOpsMixin<Box, A, Self>
         satisfies Wrapper<Box, A, Self, MonadPlus>
             & MonadOpsMixin<Box, A, Self>
             & PlusOpsMixin<Box, A, Self>
@@ -22,9 +22,9 @@ interface MonadPlusOpsMixin<Box, out A, Self>
         given Self<C, El> given C<out E2> {}
 
 shared
-interface MonadPlusWrapper<Box, out A>
+interface MonadPlusWrapper<Box, A>
         satisfies MonadWrapper<Box, A>
-            & MonadOpsMixin<Box, A, MonadPlusWrapper>
+            & MonadPlusOpsMixin<Box, A, MonadPlusWrapper>
         given Box<out E> {}
 
 class MonadPlusWrapperImpl<Box, A>(

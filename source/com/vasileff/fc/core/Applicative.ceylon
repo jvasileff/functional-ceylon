@@ -21,7 +21,7 @@ interface Applicative<Box>
 }
 
 shared
-interface ApplicativeOpsMixin<Box, out A, out Self>
+interface ApplicativeOpsMixin<Box, A, out Self>
         satisfies Wrapper<Box, A, Self, Applicative>
             & FunctorOpsMixin<Box, A, Self>
         given Box<out E>
@@ -33,7 +33,7 @@ interface ApplicativeOpsMixin<Box, out A, out Self>
 }
 
 shared
-interface ApplicativeWrapper<Box, out A>
+interface ApplicativeWrapper<Box, A>
         satisfies FunctorWrapper<Box, A>
             & ApplicativeOpsMixin<Box, A, ApplicativeWrapper>
         given Box<out E> {}
