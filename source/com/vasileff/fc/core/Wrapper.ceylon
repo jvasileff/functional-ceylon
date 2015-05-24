@@ -1,8 +1,8 @@
 shared
 interface Wrapper<Box, out A, out Self, out TypeClass>
         given Box<out E>
-        given Self<SC, SE> given SC<out SCE>
-        given TypeClass<TC> given TC<out TCE> {
+        given Self<SB, SE> given SB<out SBE>
+        given TypeClass<TB> given TB<out TBE> {
 
     shared formal
     Box<A> unwrapped;

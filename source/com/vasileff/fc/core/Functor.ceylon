@@ -11,13 +11,22 @@ interface Functor<Box>
         //=>  shuffle(curry(map<A,B>))(f);
         =>  (Box<A> as) => map<A,B>(as, f);
 
-    // TODO consider reverting to using an anonymous class
-    // after https://github.com/ceylon/ceylon-spec/issues/1310
     shared default
     FunctorWrapper<Box, A> wrap<A>
             (Box<A> unwrapped)
-        =>  FunctorWrapperImpl<Box, A>
-                (this, unwrapped);
+            => let (uw = unwrapped) object
+            satisfies FunctorWrapper<Box, A> {
+
+        shared actual
+        Box<A> unwrapped => uw;
+
+        shared actual
+        Functor<Box> typeClass => outer;
+
+        shared actual
+        FunctorWrapper<Box, E> wrap<E>(Box<E> wrapped)
+            =>  outer.wrap<E>(wrapped);
+    };
 }
 
 shared
@@ -35,14 +44,3 @@ shared
 interface FunctorWrapper<Box, out A>
         satisfies FunctorOpsMixin<Box, A, FunctorWrapper>
         given Box<out E> {}
-
-class FunctorWrapperImpl<Box, A>(
-        shared actual Functor<Box> typeClass,
-        shared actual Box<A> unwrapped)
-        satisfies FunctorWrapper<Box, A>
-        given Box<out E> {
-
-    shared actual
-    FunctorWrapper<Box, E> wrap<E>(Box<E> wrapped)
-        =>  FunctorWrapperImpl<Box, E>(typeClass, wrapped);
-}

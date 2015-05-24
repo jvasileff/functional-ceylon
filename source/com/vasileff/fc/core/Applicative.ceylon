@@ -11,13 +11,22 @@ interface Applicative<Box>
             Box<A> container,
             Box<B(A)> f);
 
-    // TODO consider reverting to using an anonymous class
-    // after https://github.com/ceylon/ceylon-spec/issues/1310
     shared actual default
     ApplicativeWrapper<Box, A> wrap<A>
             (Box<A> unwrapped)
-        =>  ApplicativeWrapperImpl<Box, A>
-                (this, unwrapped);
+            => let (uw = unwrapped) object
+            satisfies ApplicativeWrapper<Box, A> {
+
+        shared actual
+        Box<A> unwrapped => uw;
+
+        shared actual
+        Applicative<Box> typeClass => outer;
+
+        shared actual
+        ApplicativeWrapper<Box, E> wrap<E>(Box<E> wrapped)
+            =>  outer.wrap<E>(wrapped);
+    };
 }
 
 shared
@@ -37,14 +46,3 @@ interface ApplicativeWrapper<Box, A>
         satisfies FunctorWrapper<Box, A>
             & ApplicativeOpsMixin<Box, A, ApplicativeWrapper>
         given Box<out E> {}
-
-class ApplicativeWrapperImpl<Box, A>(
-        shared actual Applicative<Box> typeClass,
-        shared actual Box<A> unwrapped)
-        satisfies ApplicativeWrapper<Box, A>
-        given Box<out E> {
-
-    shared actual
-    ApplicativeWrapper<Box, E> wrap<E>(Box<E> wrapped)
-        =>  ApplicativeWrapperImpl<Box, E>(typeClass, wrapped);
-}
