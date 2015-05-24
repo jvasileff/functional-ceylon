@@ -10,7 +10,7 @@ interface Foldable<Box>
 
     shared default
     A intercalate<A>(Monoid<A> monoid, Box<A> source, A a)
-        =>  foldLeft<A,A?>(source, null)((A? partial, element)
+        =>  foldLeft<A,A?>(source, null)((partial, element)
             =>  monoid.append(
                     if (exists partial)
                     then monoid.append(partial, a)
@@ -29,7 +29,7 @@ interface FoldableOpsMixin<Box, A, Self>
         =>  typeClass.foldLeft(unwrapped, initial)(accumulating);
 
     shared default
-    A intercalate(Monoid<A> monoid, A item)
+    A|B intercalate<B>(Monoid<A|B> monoid, B item)
         =>  typeClass.intercalate(monoid, unwrapped, item);
 }
 

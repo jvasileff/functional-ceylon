@@ -94,4 +94,19 @@ void intercalate() {
                 .intercalate(
                     SequentialMonoid<Integer>(), [5]),
             [2, 5, 4, 5, 6]);
+
+    // union types
+
+    assertEquals(sequentialTypeClass.intercalate(
+            SequentialMonoid<Integer|String>(),
+            [[1], [2], [3]], ["<-", "->"]),
+            [1, "<-", "->", 2, "<-", "->", 3]);
+
+    assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
+            ([[1],[2],[3]])
+                .map(([Integer*] xs)
+                    => sequentialTypeClass.map(xs, 2.times))
+                .intercalate(
+                    SequentialMonoid<Integer|String>(), ["-"]),
+            [2, "-", 4, "-", 6]);
 }
