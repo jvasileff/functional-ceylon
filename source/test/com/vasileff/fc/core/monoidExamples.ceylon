@@ -11,7 +11,8 @@ import com.vasileff.fc.core {
     stringMonoid,
     sequentialTypeClass,
     maybeTypeClass,
-    identityTypeClass
+    identityTypeClass,
+    SequentialMonoid
 }
 
 shared test
@@ -55,4 +56,32 @@ void monoidExamples() {
         foldable = sequentialTypeClass;
         elements = [1.0, 2.0, 3.0];
     }, 6.0);
+}
+
+shared
+void intercalate() {
+    assertEquals(sequentialTypeClass.intercalate(
+            SequentialMonoid<Integer>(),
+            [[1], [2], [3]], [5]),
+            [1, 5, 2, 5, 3]);
+
+    assertEquals(sequentialTypeClass.intercalate(
+            integerPlusMonoid,
+            [1, 2, 3], 5), 16);
+
+    assertEquals(sequentialTypeClass.intercalate(
+            integerTimesMonoid,
+            [1, 2, 3], 5), 150);
+
+    assertEquals(identityTypeClass.intercalate(
+            integerPlusMonoid, 5, 10), 5);
+
+    assertEquals(maybeTypeClass.intercalate(
+            integerPlusMonoid, 5, 10), 5);
+
+    assertEquals(maybeTypeClass.intercalate<Integer>(
+            integerPlusMonoid, null, 10), 0);
+
+    assertEquals(maybeTypeClass.intercalate<Integer>(
+            integerTimesMonoid, null, 10), 1);
 }

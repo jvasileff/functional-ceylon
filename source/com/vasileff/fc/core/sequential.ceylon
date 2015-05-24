@@ -3,6 +3,18 @@ import ceylon.language {
 }
 
 shared
+class SequentialMonoid<A>()
+        satisfies Monoid<Sequential<A>> {
+
+    shared actual
+    Empty zero = [];
+
+    shared actual
+    Sequential<A> append([A*] xs, [A*] ys)
+        =>  xs.append(ys);
+}
+
+shared
 object sequentialTypeClass
         satisfies MonadPlus<Sequential>
             & Foldable<Sequential> {
@@ -37,7 +49,7 @@ object sequentialTypeClass
             =>  container.map((A element)
                 =>  f(element))).sequence();
 
-    // TODO FoldableMonadPlus interface w/this as `foldableWrapper`?
+    // TODO Foldable adPlus interface w/this as `foldableWrapper`?
     shared
     FoldableMonadPlusWrapper<Sequential, A> foldableWrapper<A>
             (Sequential<A> unwrapped)
