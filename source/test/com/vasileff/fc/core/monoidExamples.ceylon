@@ -85,6 +85,13 @@ void intercalate() {
     assertEquals(maybeTypeClass.intercalate<Integer>(
             integerTimesMonoid, null, 10), 1);
 
+    assertEquals(String(sequentialTypeClass.intercalate(
+            SequentialMonoid<Character>(),
+            ["Say".sequence(), "more,".sequence(),
+             "more".sequence(), "clearly".sequence()],
+            " ".sequence())),
+            "Say more, more clearly");
+
     // with wrapper
 
     assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
