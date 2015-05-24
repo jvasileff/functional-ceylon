@@ -92,7 +92,7 @@ void intercalate() {
 
     // with wrapper
 
-    assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
+    assertEquals(sequentialTypeClass.wrap<[Integer*]>
             ([[1], [2], [3]])
                 .map(([Integer*] xs)
                     => sequentialTypeClass.map(xs, 2.times))
@@ -107,7 +107,7 @@ void intercalate() {
             [[1], [2], [3]], ["<-", "->"]),
             [1, "<-", "->", 2, "<-", "->", 3]);
 
-    assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
+    assertEquals(sequentialTypeClass.wrap<[Integer*]>
             ([[1], [2], [3]])
                 .map(([Integer*] xs)
                     => sequentialTypeClass.map(xs, 2.times))

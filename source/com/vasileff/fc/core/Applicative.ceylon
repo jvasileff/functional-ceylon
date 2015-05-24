@@ -1,6 +1,7 @@
 shared
 interface Applicative<Box>
         satisfies Functor<Box>
+            & Wrapping<ApplicativeWrapper, Box>
         given Box<out E> {
 
     shared formal
@@ -22,27 +23,27 @@ interface Applicative<Box>
 
         shared actual
         Applicative<Box> typeClass => outer;
-
-        shared actual
-        ApplicativeWrapper<Box, E> wrap<E>(Box<E> wrapped)
-            =>  outer.wrap<E>(wrapped);
     };
 }
 
 shared
-interface ApplicativeOpsMixin<Box, A, out Self>
-        satisfies Wrapper<Box, A, Self, Applicative>
-            & FunctorOpsMixin<Box, A, Self>
+interface ApplicativeOpsMixin<Box, A, out Self, out FSelf>
+        satisfies Wrapper<Box, A, Self, FSelf>
+            & FunctorOpsMixin<Box, A, Self, FSelf>
+        given FSelf<FSB>
+            satisfies Applicative<FSB> & Wrapping<Self, FSB>
+            given FSB<out FSBE>
         given Box<out E>
-        given Self<C, El> given C<out E2> {
+        given Self<SB, SE>
+            given SB<out SBE> {
 
     shared default
     Self<Box, B> apply<B>(Box<B(A)> f)
-        =>  wrap<B>(typeClass.apply(unwrapped, f));
+        =>  typeClass.wrap<B>(typeClass.apply(unwrapped, f));
 }
 
 shared
 interface ApplicativeWrapper<Box, A>
         satisfies FunctorWrapper<Box, A>
-            & ApplicativeOpsMixin<Box, A, ApplicativeWrapper>
+            & ApplicativeOpsMixin<Box, A, ApplicativeWrapper, Applicative>
         given Box<out E> {}

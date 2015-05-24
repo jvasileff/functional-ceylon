@@ -8,12 +8,16 @@ interface Plus<Box>
 }
 
 shared
-interface PlusOpsMixin<Box, out A, out Self>
-        satisfies Wrapper<Box, A, Self, Plus>
+interface PlusOpsMixin<Box, out A, out Self, out FSelf>
+        satisfies Wrapper<Box, A, Self, FSelf>
+        given FSelf<FSB>
+            satisfies Plus<FSB> & Wrapping<Self, FSB>
+            given FSB<out FSBE>
         given Box<out E>
-        given Self<C, El> given C<out E2> {
+        given Self<SB, SE>
+            given SB<out SBE> {
 
     shared default
     Self<Box, A|B> plus<B>(Box<B> bs)
-        =>  wrap<A|B>(typeClass.plus(unwrapped, bs));
+        =>  typeClass.wrap<A|B>(typeClass.plus(unwrapped, bs));
 }

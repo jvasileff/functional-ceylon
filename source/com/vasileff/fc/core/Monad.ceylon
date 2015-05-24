@@ -1,6 +1,7 @@
 shared
 interface Monad<Box>
         satisfies Applicative<Box>
+            & Wrapping<MonadWrapper, Box>
         given Box<out E> {
 
     shared formal
@@ -27,28 +28,33 @@ interface Monad<Box>
 
         shared actual
         Monad<Box> typeClass => outer;
-
-        shared actual
-        MonadWrapper<Box, E> wrap<E>(Box<E> wrapped)
-            =>  outer.wrap<E>(wrapped);
     };
 }
 
+// TODO remove redundant "satisfies FunctorOpsMixin"; for demo only
+
 shared
-interface MonadOpsMixin<Box, A, out Self>
-        satisfies Wrapper<Box, A, Self, Monad>
-            & ApplicativeOpsMixin<Box, A, Self>
+interface MonadOpsMixin<Box, A, out Self, out FSelf>
+        satisfies Wrapper<Box, A, Self, FSelf>
+            & FunctorOpsMixin<Box, A, Self, FSelf>
+            & ApplicativeOpsMixin<Box, A, Self, FSelf>
+        given FSelf<FSB>
+            satisfies Monad<FSB>
+                & Wrapping<Self, FSB>
+            given FSB<out FSBE>
         given Box<out E>
-        given Self<C, El> given C<out E2> {
+        given Self<SB, SE>
+            given SB<out SBE> {
 
     shared default
     Self<Box, B> bind<B>(
             Box<B>(A) apply)
-        =>  wrap<B>(typeClass.bind(unwrapped, apply));
+        =>  typeClass.wrap<B>(typeClass.bind(unwrapped, apply));
 }
 
 shared
 interface MonadWrapper<Box, A>
         satisfies ApplicativeWrapper<Box, A>
-            & MonadOpsMixin<Box, A, MonadWrapper>
-        given Box<out E> {}
+            & FunctorOpsMixin<Box, A, MonadWrapper, Monad>
+            & MonadOpsMixin<Box, A, MonadWrapper, Monad>
+        given Box<out BE> {}

@@ -1,5 +1,6 @@
 shared
 interface Foldable<Box>
+        satisfies Wrapping<FoldableWrapper, Box>
         given Box<out E> {
 
     shared formal
@@ -19,10 +20,14 @@ interface Foldable<Box>
 }
 
 shared
-interface FoldableOpsMixin<Box, A, Self>
-        satisfies Wrapper<Box, A, Self, Foldable>
+interface FoldableOpsMixin<Box, A, out Self, out FSelf>
+        satisfies Wrapper<Box, A, Self, FSelf>
+        given FSelf<FSB>
+            satisfies Foldable<FSB> & Wrapping<Self, FSB>
+            given FSB<out FSBE>
         given Box<out E>
-        given Self<C, El> given C<out E2> {
+        given Self<SB, SE>
+            given SB<out SBE> {
 
     shared default
     B foldLeft<B>(B initial)(B(B, A) accumulating)
@@ -34,8 +39,68 @@ interface FoldableOpsMixin<Box, A, Self>
 }
 
 shared
-interface FoldableMonadPlusWrapper<Box, A>
+interface FoldableWrapper<Box, A>
+        satisfies FoldableOpsMixin<Box, A, FoldableWrapper, Foldable>
+        given Box<out E> {}
+
+// Foldable + Monad
+
+shared
+interface FoldableMonad<Box>
+        satisfies Monad<Box>
+            & Foldable<Box>
+            & Wrapping<FoldableMonadWrapper, Box>
+        given Box<out E> {
+
+    shared actual default
+    FoldableMonadWrapper<Box, A> wrap<A>
+            (Box<A> unwrapped)
+            => let (uw = unwrapped) object
+            satisfies FoldableMonadWrapper<Box, A> {
+
+        shared actual
+        Box<A> unwrapped => uw;
+
+        shared actual
+        FoldableMonad<Box> typeClass => outer;
+    };
+}
+
+shared
+interface FoldableMonadWrapper<Box, A>
         satisfies MonadWrapper<Box, A>
-            & MonadOpsMixin<Box, A, FoldableMonadPlusWrapper>
-            & FoldableOpsMixin<Box, A, FoldableMonadPlusWrapper>
+            & FoldableWrapper<Box, A>
+            & MonadOpsMixin<Box, A, FoldableMonadWrapper, FoldableMonad>
+            & FoldableOpsMixin<Box, A, FoldableMonadWrapper, FoldableMonad>
+        given Box<out E> {}
+
+// Foldable + MonadPlus
+
+shared
+interface FoldableMonadPlus<Box>
+        satisfies MonadPlus<Box>
+            & Foldable<Box>
+            & Wrapping<FoldableMonadPlusWrapper, Box>
+        given Box<out E> {
+
+    shared actual default
+    FoldableMonadPlusWrapper<Box, A> wrap<A>
+            (Box<A> unwrapped)
+            => let (uw = unwrapped) object
+            satisfies FoldableMonadPlusWrapper<Box, A> {
+
+        shared actual
+        Box<A> unwrapped => uw;
+
+        shared actual
+        FoldableMonadPlus<Box> typeClass => outer;
+    };
+}
+
+shared
+interface FoldableMonadPlusWrapper<Box, A>
+        satisfies MonadPlusWrapper<Box, A>
+            & FoldableWrapper<Box, A>
+            & MonadPlusOpsMixin<Box, A, FoldableMonadPlusWrapper, FoldableMonadPlus>
+            & FoldableOpsMixin<Box, A, FoldableMonadPlusWrapper, FoldableMonadPlus>
         given Box<out E> {}

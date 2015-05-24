@@ -3,8 +3,7 @@ alias Maybe<out T> => T?;
 
 shared
 object maybeTypeClass
-        satisfies Monad<Maybe>
-            & Foldable<Maybe> {
+        satisfies FoldableMonad<Maybe> {
 
     shared actual
     B? bind<A, B>(A? source, B?(A) apply)

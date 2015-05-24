@@ -104,7 +104,7 @@ void coalesceExample() {
 shared test
 void wrapperExample() {
     // with wrapper
-    assertEquals(sequentialTypeClass.foldableWrapper([1,2,3])
+    assertEquals(sequentialTypeClass.wrap([1,2,3])
             .map(2.times)
             .map(2.plus)
             .foldLeft(0)(plus), 18);

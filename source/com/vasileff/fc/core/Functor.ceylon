@@ -1,5 +1,6 @@
 shared
 interface Functor<Box>
+        satisfies Wrapping<FunctorWrapper, Box>
         given Box<out E> {
 
     shared formal
@@ -11,7 +12,7 @@ interface Functor<Box>
         //=>  shuffle(curry(map<A,B>))(f);
         =>  (Box<A> as) => map<A,B>(as, f);
 
-    shared default
+    shared default actual
     FunctorWrapper<Box, A> wrap<A>
             (Box<A> unwrapped)
             => let (uw = unwrapped) object
@@ -22,25 +23,25 @@ interface Functor<Box>
 
         shared actual
         Functor<Box> typeClass => outer;
-
-        shared actual
-        FunctorWrapper<Box, E> wrap<E>(Box<E> wrapped)
-            =>  outer.wrap<E>(wrapped);
     };
 }
 
 shared
-interface FunctorOpsMixin<Box, out A, out Self>
-        satisfies Wrapper<Box, A, Self, Functor>
+interface FunctorOpsMixin<Box, out A, out Self, out FunctorSelf>
+        satisfies Wrapper<Box, A, Self, FunctorSelf>
+        given FunctorSelf<FSB>
+            satisfies Functor<FSB> & Wrapping<Self, FSB>
+            given FSB<out FSBE>
         given Box<out E>
-        given Self<C, El> given C<out E2> {
+        given Self<SB, SE>
+            given SB<out SBE> {
 
     shared default
     Self<Box, B> map<B>(B(A) f)
-        =>  wrap<B>(typeClass.map(unwrapped, f));
+        =>  typeClass.wrap<B>(typeClass.map(unwrapped, f));
 }
 
 shared
 interface FunctorWrapper<Box, out A>
-        satisfies FunctorOpsMixin<Box, A, FunctorWrapper>
+        satisfies FunctorOpsMixin<Box, A, FunctorWrapper, Functor>
         given Box<out E> {}

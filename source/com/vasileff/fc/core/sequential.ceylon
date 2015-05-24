@@ -16,8 +16,7 @@ class SequentialMonoid<A>()
 
 shared
 object sequentialTypeClass
-        satisfies MonadPlus<Sequential>
-            & Foldable<Sequential> {
+        satisfies FoldableMonadPlus<Sequential> {
 
     shared actual
     Sequential<B> bind<A, B>
@@ -48,26 +47,6 @@ object sequentialTypeClass
         =>  f.flatMap((B(A) f)
             =>  container.map((A element)
                 =>  f(element))).sequence();
-
-    // TODO Foldable adPlus interface w/this as `foldableWrapper`?
-    shared
-    FoldableMonadPlusWrapper<Sequential, A> foldableWrapper<A>
-            (Sequential<A> unwrapped)
-        =>  let (tc = this, uw = unwrapped)
-            object satisfies FoldableMonadPlusWrapper<Sequential, A> {
-
-        shared actual
-        Foldable<Sequential> &
-            MonadPlus<Sequential> typeClass => tc;
-
-        shared actual
-        Sequential<A> unwrapped => uw;
-
-        shared actual
-        FoldableMonadPlusWrapper<Sequential, E> wrap<E>
-                (Sequential<E> wrapped)
-            =>  outer.foldableWrapper(wrapped);
-    };
 }
 
 shared

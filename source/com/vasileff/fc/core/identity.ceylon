@@ -3,8 +3,7 @@ alias Identity<out T> => T;
 
 shared
 object identityTypeClass
-        satisfies Monad<Identity>
-            & Foldable<Identity> {
+        satisfies FoldableMonad<Identity> {
 
     shared actual
     B bind<A, B>(A source, B(A) apply)

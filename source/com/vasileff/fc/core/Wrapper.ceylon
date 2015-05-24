@@ -1,4 +1,4 @@
-shared
+shared suppressWarnings("unusedDeclaration")
 interface Wrapper<Box, out A, out Self, out TypeClass>
         given Box<out E>
         given Self<SB, SE> given SB<out SBE>
@@ -9,19 +9,13 @@ interface Wrapper<Box, out A, out Self, out TypeClass>
 
     shared formal
     TypeClass<Box> typeClass;
-
-    shared formal
-    Self<Box, B> wrap<B>(Box<B> unwrapped);
 }
 
-// TODO should type classes encode their wrapper type?
-// Something like:
-//      interface Wrapping<Wrapper> given Wrapper<B, E> {
-//          Wrapper<Box, A> wrap<A>(Box<A> unwrapped) => ...
-//      }
-//
-//      interface Functor<Box>
-//          satisfies Wrapping<FunctorWrapper>`? { ... }
-//
-// The idea being to try to remove the `wrap` method
-// from `Wrapper`
+shared
+interface Wrapping<out WrapperType, Box>
+        given WrapperType<WB, WE> given WB<out WBE>
+        given Box<out BE> {
+
+    shared formal
+    WrapperType<Box, A> wrap<A>(Box<A> unwrapped);
+}

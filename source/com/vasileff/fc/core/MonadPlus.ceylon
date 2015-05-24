@@ -2,6 +2,7 @@ shared
 interface MonadPlus<Box>
         satisfies Monad<Box>
             & ApplicativePlus<Box>
+            & Wrapping<MonadPlusWrapper, Box>
         given Box<out E> {
 
     shared actual default
@@ -15,23 +16,23 @@ interface MonadPlus<Box>
 
         shared actual
         MonadPlus<Box> typeClass => outer;
-
-        shared actual
-        MonadPlusWrapper<Box, E> wrap<E>(Box<E> wrapped)
-            =>  outer.wrap<E>(wrapped);
     };
 }
 
 shared
-interface MonadPlusOpsMixin<Box, A, Self>
-        satisfies Wrapper<Box, A, Self, MonadPlus>
-            & MonadOpsMixin<Box, A, Self>
-            & PlusOpsMixin<Box, A, Self>
+interface MonadPlusOpsMixin<Box, A, out Self, out FSelf>
+        satisfies Wrapper<Box, A, Self, FSelf>
+            & MonadOpsMixin<Box, A, Self, FSelf>
+            & PlusOpsMixin<Box, A, Self, FSelf>
+        given FSelf<FSB>
+            satisfies MonadPlus<FSB> & Wrapping<Self, FSB>
+            given FSB<out FSBE>
         given Box<out E>
-        given Self<C, El> given C<out E2> {}
+        given Self<SB, SE>
+            given SB<out SBE> {}
 
 shared
 interface MonadPlusWrapper<Box, A>
         satisfies MonadWrapper<Box, A>
-            & MonadPlusOpsMixin<Box, A, MonadPlusWrapper>
+            & MonadPlusOpsMixin<Box, A, MonadPlusWrapper, MonadPlus>
         given Box<out E> {}
