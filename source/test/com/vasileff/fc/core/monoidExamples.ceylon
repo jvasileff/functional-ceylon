@@ -62,8 +62,8 @@ shared
 void intercalate() {
     assertEquals(sequentialTypeClass.intercalate(
             SequentialMonoid<Integer>(),
-            [[1], [2], [3]], [5]),
-            [1, 5, 2, 5, 3]);
+            [[1], [2], [3]], [5, 6]),
+            [1, 5, 6, 2, 5, 6, 3]);
 
     assertEquals(sequentialTypeClass.intercalate(
             integerPlusMonoid,
@@ -85,20 +85,20 @@ void intercalate() {
     assertEquals(maybeTypeClass.intercalate<Integer>(
             integerTimesMonoid, null, 10), 1);
 
-    assertEquals(String(sequentialTypeClass.intercalate(
+    assertEquals(sequentialTypeClass.intercalate(
             stringMonoid,
-            ["Say", "more,", "more", "clearly"], " ")),
+            ["Say", "more,", "more", "clearly"], " "),
             "Say more, more clearly");
 
     // with wrapper
 
     assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
-            ([[1],[2],[3]])
+            ([[1], [2], [3]])
                 .map(([Integer*] xs)
                     => sequentialTypeClass.map(xs, 2.times))
                 .intercalate(
-                    SequentialMonoid<Integer>(), [5]),
-            [2, 5, 4, 5, 6]);
+                    SequentialMonoid<Integer>(), [10, 11]),
+            [2, 10, 11, 4, 10, 11, 6]);
 
     // union types
 
@@ -108,7 +108,7 @@ void intercalate() {
             [1, "<-", "->", 2, "<-", "->", 3]);
 
     assertEquals(sequentialTypeClass.foldableWrapper<[Integer*]>
-            ([[1],[2],[3]])
+            ([[1], [2], [3]])
                 .map(([Integer*] xs)
                     => sequentialTypeClass.map(xs, 2.times))
                 .intercalate(
