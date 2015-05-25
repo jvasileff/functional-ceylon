@@ -5,9 +5,17 @@ interface Foldable<Box>
 
     shared formal
     B foldLeft<A, B>
-            (Box<A> source,
-             B initial)
+            (Box<A> source, B initial)
             (B(B, A) accumulating);
+
+    shared formal
+    B foldMap<A, B>
+            (Monoid<B> monoid, Box<A> source)
+            (B(A) mapping);
+
+    shared default
+    A fold<A>(Monoid<A> monoid, Box<A> source)
+        =>  foldLeft(source, monoid.zero)(monoid.append);
 
     shared default
     A intercalate<A>(Monoid<A> monoid, Box<A> source, A a)
@@ -34,6 +42,10 @@ interface FoldableOpsMixin<Box, A, out Self, out FSelf>
         =>  typeClass.foldLeft(unwrapped, initial)(accumulating);
 
     shared default
+    A fold(Monoid<A> monoid)
+        =>  typeClass.fold(monoid, unwrapped);
+
+    shared default
     A|B intercalate<B>(Monoid<A|B> monoid, B item)
         =>  typeClass.intercalate(monoid, unwrapped, item);
 }
@@ -51,6 +63,14 @@ interface FoldableMonad<Box>
             & Foldable<Box>
             & Wrapping<FoldableMonadWrapper, Box>
         given Box<out E> {
+
+    // TODO too inefficient to have a default implementation?
+    // or, why not just compose mapping & monoid.append?
+    shared actual default
+    B foldMap<A, B>
+            (Monoid<B> monoid, Box<A> source)
+            (B(A) mapping)
+        =>  fold(monoid, map<A, B>(source, mapping));
 
     shared actual default
     FoldableMonadWrapper<Box, A> wrap<A>
@@ -79,7 +99,7 @@ interface FoldableMonadWrapper<Box, A>
 shared
 interface FoldableMonadPlus<Box>
         satisfies MonadPlus<Box>
-            & Foldable<Box>
+            & FoldableMonad<Box>
             & Wrapping<FoldableMonadPlusWrapper, Box>
         given Box<out E> {
 
@@ -100,7 +120,7 @@ interface FoldableMonadPlus<Box>
 shared
 interface FoldableMonadPlusWrapper<Box, A>
         satisfies MonadPlusWrapper<Box, A>
-            & FoldableWrapper<Box, A>
+            & FoldableMonadWrapper<Box, A>
             & MonadPlusOpsMixin<Box, A, FoldableMonadPlusWrapper, FoldableMonadPlus>
             & FoldableOpsMixin<Box, A, FoldableMonadPlusWrapper, FoldableMonadPlus>
         given Box<out E> {}

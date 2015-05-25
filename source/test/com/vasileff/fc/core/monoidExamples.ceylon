@@ -22,9 +22,7 @@ void monoidExamples() {
             Foldable<Container> foldable,
             Container<Element> elements)
             given Container<out E>
-        =>  foldable.foldLeft
-                    (elements, monoid.zero)
-                    (monoid.append);
+        =>  foldable.fold(monoid, elements);
 
     assertEquals(sum(stringMonoid, sequentialTypeClass, []), "");
     assertEquals(sum(stringMonoid, sequentialTypeClass, ["a","b","c","d"]), "abcd");

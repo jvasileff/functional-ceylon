@@ -35,6 +35,13 @@ object sequentialTypeClass
         =>  source.fold(initial)(accumulating);
 
     shared actual
+    B foldMap<A, B>
+            (Monoid<B> monoid, Sequential<A> source)
+            (B(A) mapping)
+        =>  source.fold(monoid.zero)((a, b)
+            =>  monoid.append(a, mapping(b)));
+
+    shared actual
     [Nothing*] empty
         =>  emptySequence;
 
