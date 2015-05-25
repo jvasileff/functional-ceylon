@@ -49,7 +49,7 @@ void monoidExamples() {
     assertEquals(sum {
         object satisfies Monoid<Float> {
             zero = 0.0;
-            append = uncurry(Float.plus);
+            append = plus<Float>;
         };
         foldable = sequentialTypeClass;
         elements = [1.0, 2.0, 3.0];
