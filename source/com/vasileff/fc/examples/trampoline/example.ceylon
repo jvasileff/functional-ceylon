@@ -1,12 +1,18 @@
 import com.vasileff.ceylon.xmath.whole {
     zero,
     one,
-    Whole
+    Whole,
+    two
+}
+import com.vasileff.fc.core {
+    Monad,
+    wholePlusMonoid
 }
 import com.vasileff.fc.trampoline {
     Call,
     Bounce,
-    Return
+    Return,
+    bounceTypeClass
 }
 
 Bounce<Boolean> even(Integer x, Boolean alwaysBounce = false)
@@ -53,21 +59,28 @@ void runTrampolineTest() {
 
     print(even(1M).flatMap(flip).result);
     print(even(1M).map((x) => !x).result);
-
-//    value iters = 10M;
-//    benchmark {
-//        scale = iters / 1k; // picoseconds per iteration
-//        ["instanceof", () => even(iters).result],
-//        ["instanceof alwaysBounce", () => even(iters, true).result]
-//
-//        //repeat(iters, () => fact(100).result)
-//    };
 }
 
-/*
-    Summary min/max/avg/rstdev/pct
-    instanceof              1411/1525/1470/2% (100%)
-    reified                 1963/2095/2011/2% (139%)
-    instanceof alwaysBounce 15505/15789/15625/0% (1098%)
-    reified alwaysBounce    476167/478798/477435/0% (33741%)
-*/
+shared
+void bounceTypeClassExamples() {
+    function quadrupleWithLift<Container>(
+            Monad<Container> monad,
+            Container<Whole> ints)
+            given Container<out E>
+        =>  let (double = monad.lift(two.times))
+            double(double(ints));
+
+    print(quadrupleWithLift(bounceTypeClass, fact(6)).result);
+
+    value double = two.times;
+    value doubleBounce = bounceTypeClass.lift(double);
+    print(doubleBounce(fact(2)).result);
+    print(doubleBounce(bounceTypeClass.unit(two)).result);
+
+    print((bounceTypeClass.wrap(fact(10))
+            .map(two.times).unwrapped.result));
+
+    // use fold to get a value!
+    print((bounceTypeClass.wrap(fact(10))
+            .map(two.times).fold(wholePlusMonoid)));
+}
