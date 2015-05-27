@@ -1,11 +1,9 @@
 shared
 object enumeratees {
 
-    // TODO: convert back to a method
-    // (https://github.com/ceylon/ceylon-js/issues/550)
     shared
-    class MapInput<From, To>(
-            Input<To>(Input<From>) collecting) //=> object
+    Enumeratee<From, To> mapInput<From, To>(
+            Input<To>(Input<From>) collecting) => object
             satisfies NextOnly<From, To> {
 
         shared actual
@@ -16,18 +14,16 @@ object enumeratees {
                     apply(inner.consume(collecting(input)))
                 case (eof)
                     Done(inner, input);
-    }
+    };
 
     shared
     Enumeratee<From, To> map<From, To>(To(From) f)
-        =>  MapInput((Input<From> i) => i.map(f));
+        =>  mapInput((Input<From> i) => i.map(f));
 
-    // TODO: convert back to a method
-    // (https://github.com/ceylon/ceylon-js/issues/550)
     shared
-    class Group<From, To>(
+    Enumeratee<From, To> group<From, To>(
             "The [[Iteratee]] that collects each group"
-            Iteratee<From, To> collecting) //=> object
+            Iteratee<From, To> collecting) => object
             satisfies NextOnly<From, To> {
 
         // FIXME this is ugly
@@ -73,28 +69,23 @@ object enumeratees {
         Iteratee<From, Iteratee<To, Out>> next<Out>
                 (Next<To, Out> inner)(Input<From> input)
             =>  step(collecting, inner)(input);
+    };
+
+    "Convenience Enumeratee to only process [[Next]] [[Iteratee]]s"
+    interface NextOnly<From, To> satisfies Enumeratee<From, To> {
+
+        "When provided with [[inner]], produces a [[Consume]]. Defined
+         in curried form to simplify syntax for implementations."
+        shared formal
+        Iteratee<From, Iteratee<To, Out>> next<Out>
+                (Next<To, Out> inner)(Input<From> input);
+
+        shared actual
+        Iteratee<From, Iteratee<To, Out>> apply<Out>(Iteratee<To, Out> inner)
+            =>  switch (it = inner of IterateeEnum<To, Out>)
+                case (is NextRaw)
+                    Next(next(it))
+                case (is DoneRaw | ErrorRaw)
+                    Done(inner, nil.input<From>());
     }
-}
-
-// TODO NextOnly move back into `enumeratees`; see
-// https://github.com/ceylon/ceylon-js/issues/549
-// TODO unshare when possible; see
-// https://github.com/ceylon/ceylon-js/issues/550
-"Convenience Enumeratee to only process [[Next]] [[Iteratee]]s"
-shared
-interface NextOnly<From, To> satisfies Enumeratee<From, To> {
-
-    "When provided with [[inner]], produces a [[Consume]]. Defined
-     in curried form to simplify syntax for implementations."
-    shared formal
-    Iteratee<From, Iteratee<To, Out>> next<Out>
-            (Next<To, Out> inner)(Input<From> input);
-
-    shared actual
-    Iteratee<From, Iteratee<To, Out>> apply<Out>(Iteratee<To, Out> inner)
-        =>  switch (it = inner of IterateeEnum<To, Out>)
-            case (is NextRaw)
-                Next(next(it))
-            case (is DoneRaw | ErrorRaw)
-                Done(inner, nil.input<From>());
 }

@@ -55,7 +55,7 @@ class Enumerator<Element>() {
     shared
     Enumerator<OtherElement> mapInput<OtherElement>(
             Input<OtherElement>(Input<Element>) f)
-        =>  through(enumeratees.MapInput(f));
+        =>  through(enumeratees.mapInput(f));
 
     shared
     Enumerator<Other> flatMap<Other>(Enumerator<Other>(Element) f) => object

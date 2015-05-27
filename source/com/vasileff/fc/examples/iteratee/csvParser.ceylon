@@ -64,7 +64,7 @@ void csvTesting() {
         case (is String[])  "The result is: ``result``"
         else                "Error: ``result.throwable.message``");
 
-    value csv = enumeratees.Group(record());
+    value csv = enumeratees.group(record());
     //value consumer = iteratees.consume<{String*}>();
     printAll(file.through(csv).runOrThrow(iteratees.consume<[String*]>()));
 
