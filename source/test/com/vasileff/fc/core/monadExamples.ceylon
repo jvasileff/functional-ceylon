@@ -19,7 +19,8 @@ import com.vasileff.fc.core {
     Foldable,
     FoldableWrapper,
     MonadWrapper,
-    integerPlusMonoid
+    integerPlusMonoid,
+    Maybe
 }
 
 shared test
@@ -146,6 +147,12 @@ void flattenExample() {
     assertEquals(flattenTest<Sequential, Integer>
             (sequentialTypeClass, [[1,2],[3,4]]),
             [1,2,3,4]);
+
+    assertEquals(maybeTypeClass.join(1), 1);
+
+    assertEquals(flattenTest<Maybe, Integer>
+            (maybeTypeClass, 1),
+            1);
 }
 
 shared test
