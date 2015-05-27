@@ -27,7 +27,7 @@ class LoggingAdvice<E, C>(
     C<Result> flatMap<Element, Result>(
             C<Result>(Element) mapper,
             C<Element> stream)
-        =>  alg.flatMap<Element, Result>(mapper, stream); // FIXME inference?
+        =>  alg.flatMap(mapper, stream);
 
     shared actual
     C<Element> filter<Element>(
@@ -40,7 +40,7 @@ class LoggingAdvice<E, C>(
     E<Integer> count<T>
             (C<T> stream) {
         print("counting...");
-        return alg.count<T>(stream); // FIXME inference?
+        return alg.count(stream);
     }
 
     shared actual
