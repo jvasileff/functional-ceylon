@@ -31,12 +31,9 @@ interface Monad<Box>
     };
 }
 
-// TODO remove redundant "satisfies FunctorOpsMixin"; for demo only
-
 shared
 interface MonadOpsMixin<Box, A, out Self, out FSelf>
         satisfies Wrapper<Box, A, Self, FSelf>
-            & FunctorOpsMixin<Box, A, Self, FSelf>
             & ApplicativeOpsMixin<Box, A, Self, FSelf>
         given FSelf<FSB>
             satisfies Monad<FSB>
@@ -55,6 +52,5 @@ interface MonadOpsMixin<Box, A, out Self, out FSelf>
 shared
 interface MonadWrapper<Box, A>
         satisfies ApplicativeWrapper<Box, A>
-            & FunctorOpsMixin<Box, A, MonadWrapper, Monad>
             & MonadOpsMixin<Box, A, MonadWrapper, Monad>
         given Box<out BE> {}
