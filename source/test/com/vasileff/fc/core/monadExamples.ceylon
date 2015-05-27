@@ -16,7 +16,10 @@ import com.vasileff.fc.core {
     identityTypeClass,
     maybeTypeClass,
     MonadPlus,
-    Foldable
+    Foldable,
+    FoldableWrapper,
+    MonadWrapper,
+    integerPlusMonoid
 }
 
 shared test
@@ -159,4 +162,24 @@ void liftExample() {
 
     assertEquals(quadrupleWithLift
             (sequentialTypeClass, 2..5), [8,12,16,20]);
+}
+
+shared
+void wrapperExperiment() {
+    alias AdHocTypeClass
+        =>  Foldable<Sequential> &
+            Monad<Sequential>;
+
+    alias AdHocWrapper
+        =>  FoldableWrapper<Sequential,Integer> &
+            MonadWrapper<Sequential,Integer>;
+
+    AdHocTypeClass tc = sequentialTypeClass;
+
+    AdHocWrapper wrapper = tc.wrap([1,2,3]);
+    // would be nice to have this be guaranteed,
+    // and w/o assert. But probably not possible.
+    assert(is AdHocWrapper result1 = wrapper.map(2.times));
+    assert(is AdHocWrapper result2 = wrapper.map(2.times));
+    print(result2.fold(integerPlusMonoid));
 }
