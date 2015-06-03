@@ -20,7 +20,8 @@ import com.vasileff.fc.core {
     FoldableWrapper,
     MonadWrapper,
     integerPlusMonoid,
-    Maybe
+    Maybe,
+    covariantArrayTypeClass
 }
 
 shared test
@@ -127,6 +128,11 @@ void wrapperExample() {
         =>  f.wrap(source)
                 .map(2.times).map(Object.string)
                 .unwrapped;
+
+    assertEquals(doubleToString
+            (covariantArrayTypeClass, Array(2:5))
+                .sequence(),
+            ["4","6","8","10","12"]);
 
     assertEquals(doubleToString
             (sequentialTypeClass, 1:5),
