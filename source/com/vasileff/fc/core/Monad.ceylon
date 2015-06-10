@@ -9,9 +9,7 @@ interface Monad<Box>
 
     shared actual default
     Box<B> map<A, B>(Box<A> source, B(A) apply)
-        // FIXME https://github.com/ceylon/ceylon.language/issues/699
-        //=>  bind(source, compose(unit<B>, apply));
-        =>  bind(source, (A a) => unit(apply(a)));
+        =>  bind(source, compose(unit<B>, apply));
 
     shared default
     Box<A> join<A>(Box<Box<A>> source)

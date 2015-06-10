@@ -9,7 +9,7 @@ interface Functor<Box>
     shared default
     Box<B>(Box<A>) lift<A, B>(B(A) f)
         // FIXME remove workaround after
-        // https://github.com/ceylon/ceylon-js/issues/568
+        // https://github.com/ceylon/ceylon-js/issues/583
         //=>  shuffle(curry(map<A,B>))(f);
         =>  (Box<A> as) => map<A,B>(as, f);
 
