@@ -94,7 +94,7 @@ class Next<In, out Out> satisfies Iteratee<In, Out> {
     }
 
     shared
-    new On(element, nil, eof) {
+    new onInput(element, nil, eof) {
         Iteratee<In, Out> element(In element);
         Iteratee<In, Out> nil();
         Iteratee<In, Out> eof();

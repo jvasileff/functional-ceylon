@@ -24,7 +24,7 @@ object iteratees {
 
         Next<Element, ConsList<Element>> step(
                 Integer count,
-                ConsList<Element> data = emptyCons) => Next.On {
+                ConsList<Element> data = emptyCons) => Next.onInput {
 
             function element(Element element)
                 =>  let (remaining = count - 1,
@@ -55,7 +55,7 @@ object iteratees {
             {Element*}? data = null) {
 
         Next<Element, ConsList<Element>> step(
-                ConsList<Element> data = emptyCons) => Next.On {
+                ConsList<Element> data = emptyCons) => Next.onInput {
 
             function element(Element element)
                 =>  if (!matches(element))
@@ -80,7 +80,7 @@ object iteratees {
     Iteratee<Element, Element?> head<Element>()
             given Element satisfies Object {
 
-        Next<Element, Element?> step() => Next.On {
+        Next<Element, Element?> step() => Next.onInput {
             function element(Element element)
                 =>  Done(element, nil.input<Element>());
 
@@ -97,7 +97,7 @@ object iteratees {
     shared
     Iteratee<Element, Integer> drop<Element>(Integer count) {
 
-        Next<Element, Integer> step(Integer count) => Next.On {
+        Next<Element, Integer> step(Integer count) => Next.onInput {
 
             function element(Element element)
                 =>  let (remaining = count - 1)
@@ -121,7 +121,7 @@ object iteratees {
     Iteratee<Element, Anything> dropWhile<Element>(
             Boolean matches(Element c)) {
 
-        Next<Element, Anything> step() => Next.On {
+        Next<Element, Anything> step() => Next.onInput {
 
             function element(Element element)
                 =>  if (!matches(element))
@@ -142,7 +142,7 @@ object iteratees {
     Iteratee<Element, Element?> peek<Element>()
             given Element satisfies Object {
 
-        Next<Element, Element?> step() => Next.On {
+        Next<Element, Element?> step() => Next.onInput {
             function element(Element element)
                 =>  Done(element, Chunk(element));
 
@@ -186,7 +186,7 @@ object iteratees {
             (Out initial)
             (Out accumulating(Out partial, In element)) {
 
-        Next<In,Out> step(Out partial) => Next.On {
+        Next<In,Out> step(Out partial) => Next.onInput {
             function element(In element)
                 =>  step(accumulating(partial, element));
 
@@ -205,7 +205,7 @@ object iteratees {
             (Out initial)
             ([Out, Boolean] accumulating(Out partial, In element)) {
 
-        Next<In,Out> step(Out partial) => Next.On {
+        Next<In,Out> step(Out partial) => Next.onInput {
 
             function element(In element)
                 =>  let ([result, done] = accumulating(partial, element))
