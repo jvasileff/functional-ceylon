@@ -167,14 +167,23 @@ void liftExample() {
             Monad<Container> monad,
             Container<Integer> ints)
             given Container<out E>
-        =>  let (double = monad.lift(2.times))
-            double(double(ints));
+        =>  let (double = monad.lift(4.times))
+            double(ints);
 
     assertEquals(quadrupleWithLift
             (identityTypeClass, 2), 8);
 
     assertEquals(quadrupleWithLift
-            (sequentialTypeClass, 2..5), [8,12,16,20]);
+            (covariantArrayTypeClass, Array(2..5)),
+            Array{8, 12, 16, 20});
+
+    value double = sequentialTypeClass.lift(4.times);
+    assertEquals(double(2..5),
+            [8,12,16,20]);
+
+    assertEquals(quadrupleWithLift
+            (sequentialTypeClass, 2..5),
+            [8,12,16,20]);
 }
 
 shared

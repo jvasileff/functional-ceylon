@@ -54,6 +54,12 @@ object sequentialTypeClass
         =>  f.flatMap((B(A) f)
             =>  container.map((A element)
                 =>  f(element))).sequence();
+
+    shared actual
+    [B*]([A*]) lift<A, B>(B(A) f)
+        // FIXME this refinement shouldn't be necessary!
+        // Wasn't fixed by https://github.com/ceylon/ceylon-js/issues/583
+        =>  shuffle(curry(map<A,B>))(f);
 }
 
 shared
