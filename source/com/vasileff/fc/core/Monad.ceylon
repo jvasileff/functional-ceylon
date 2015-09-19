@@ -13,11 +13,7 @@ interface Monad<Box>
 
     shared default
     Box<A> join<A>(Box<Box<A>> source)
-        // FIXME JavaScript bug; see [[flattenExample]]
-        // affects non-Sequentials, so probably not the same as
-        // https://github.com/ceylon/ceylon-js/issues/568
-        //=>  bind<Box<A>, A>(source, identity<Box<A>>);
-        =>  bind<Box<A>, A>(source, (Box<A> a) => a);
+        =>  bind<Box<A>, A>(source, identity<Box<A>>);
 
     shared actual default
     MonadWrapper<Box, A> wrap<A>
