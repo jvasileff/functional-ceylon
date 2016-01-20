@@ -113,4 +113,6 @@ void run() {
         ).unwrapped;
     promisedQuotes.completed((quotes) => print("Now we have them: ``quotes``"));
     deferredList.fulfill(["TWTR", "EBAY"]); // JS Compiler meltdown!
+
+    print("end of run()");
 }
