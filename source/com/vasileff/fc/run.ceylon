@@ -7,5 +7,6 @@ shared void run() {
   testParseIpAddress();
   coreRun();
   runTrampolineTest();
-}
 
+  print("Testing complete.");
+}

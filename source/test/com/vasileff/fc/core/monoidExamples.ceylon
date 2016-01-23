@@ -56,7 +56,7 @@ void monoidExamples() {
     }, 6.0);
 }
 
-shared
+shared test
 void intercalate() {
     assertEquals(sequentialTypeClass.intercalate(
             SequentialMonoid<Integer>(),
