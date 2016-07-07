@@ -81,10 +81,6 @@ interface Iteratee<In, out Out>
     }
 }
 
-// FIXME Workaround ceylon.ast 1.2.0 bug #103
-alias NilAlias => \Inil;
-alias EofAlias => \Ieof;
-
 shared final
 class Next<In, out Out> satisfies Iteratee<In, Out> {
 
@@ -104,11 +100,8 @@ class Next<In, out Out> satisfies Iteratee<In, Out> {
         Iteratee<In, Out> eof();
         consume = (Input<In> input)
             =>  switch (input)
-// FIXME Workaround ceylon.ast 1.2.0 bug #103
-                //case (package.nil) nil()
-                //case (package.eof) eof()
-                case (is NilAlias) nil()
-                case (is EofAlias) eof()
+                case (package.nil) nil()
+                case (package.eof) eof()
                 else element(input.element);
     }
 }

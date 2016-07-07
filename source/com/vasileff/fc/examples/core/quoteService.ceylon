@@ -3,8 +3,8 @@ import ceylon.promise {
     Deferred
 }
 
-import com.vasileff.ceylon.random.api {
-    LCGRandom
+import ceylon.random {
+    DefaultRandom
 }
 import com.vasileff.fc.core {
     Functor,
@@ -70,7 +70,7 @@ Container<Quote> quoteService<Container>(
         Functor<Container> f,
         Container<Symbol> source)
         given Container<out E>
-    =>  let (random = LCGRandom())
+    =>  let (random = DefaultRandom())
         f.map(source, (Symbol symbol)
             =>  symbol ->
                     random.nextInteger(50000)/100.0);

@@ -4,8 +4,6 @@ import com.vasileff.fc.streamalg2 {
     pullAlgebra
 }
 
-// FIXME disabled due to JavaScript bug
-/*
 shared
 void streamWithLogging() {
     // same as pushAlgebra, but also logs:
@@ -25,4 +23,3 @@ void streamWithLogging() {
                 pullAlgebra.source(0..10))));
     print("The count is: ``y``");
 }
-*/

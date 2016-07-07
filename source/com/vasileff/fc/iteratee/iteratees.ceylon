@@ -42,7 +42,7 @@ object iteratees {
 
         return if (count < 1)
         then Done(data else {}, nil.input<Element>())
-        else step(count).map((ConsList<Element> rest)
+        else step(count).map((rest)
             =>  let (tail = rest.sequence().reversed)
                 if (exists data)
                 then data.chain(tail)

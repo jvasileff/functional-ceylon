@@ -1,4 +1,4 @@
-import com.vasileff.ceylon.xmath.whole {
+import ceylon.whole {
     zero,
     one,
     Whole,
